@@ -58,6 +58,6 @@ window.onscroll = e => {
 const btnWhatsapp = productPage.querySelector('#btn-buy')
 btnWhatsapp.onclick = e => {
   let message = `¡Hola! Quiero comprar esto: ${PPE.title.textContent}`
-  window.open(`https://wa.me/3243571105?text=${encodeURIComponent(message)}`, '_blank')
+  window.open(`https://wa.me/573243571105?text=${encodeURIComponent(message)}`, '_blank')
 }
 
