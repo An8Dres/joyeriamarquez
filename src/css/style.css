@@ -31,6 +31,7 @@ body {
   display: flex;
   justify-content: center;
   overflow-x: hidden;
+  -webkit-tap-highlight-color: #0000;
 }
 
 body::-webkit-scrollbar, #product-page::-webkit-scrollbar {
@@ -79,7 +80,7 @@ img {
   height: 80%;
   margin-left: 0.5rem;
   border-radius: 50%;
-  padding: 1%;
+  padding: 0.4rem;
 }
 
 .hdr-title {
@@ -140,6 +141,8 @@ img {
   height: 200px;
   box-shadow: 2px 4px 8px #0002;
   border-radius: 0.6rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .pdt-target {
@@ -209,15 +212,6 @@ img {
   color: var(--textColor);
 }
 
-.pdt-btn--agregar {
-  font-weight: bold;
-  background: var(--mainColor);
-  color: #fff;
-  width: 100%;
-  padding: 0.7rem 0.3rem;
-  border: none;
-}
-
 .nuevo {
   font-size: 0.9rem;
   font-weight: bold;
@@ -266,20 +260,27 @@ hr {
 .more-products .product button {
   inset: 0;
   font-weight: bold;
-  background-color: var(--mainColor);
-  color: white;
-  width: calc(100% - 20px);
+  color: var(--mainColor);
+  width: calc(100% - 1.6rem);
   height: 30px;
+  margin: 0.8rem;
   border: none;
-  border-radius: 0.7rem;
-  margin: 5px 0 10px 10px;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
 
 .more-products .product button:hover {
-  opacity: 0.9;
+  text-decoration: underline;
 }
 
+.more-products .product button svg {
+  fill: var(--mainColor);
+  width: 1.5rem;
+  height: 1.5rem;
+}
 
 .nav {
   background-color: var(--bgColor);
@@ -364,21 +365,45 @@ a.nav-selected {
   will-change: translate;
   background-color: var(--bgColor);
   width: 100vw;
-  height: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   position: fixed;
   top: 0;
   translate: 100%;
   z-index: 4;
   transition: translate .2s ease;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 #product-page.active {
   translate: 0;
 }
 
+.product-page--block:nth-child(1) {
+  background-color: var(--bgColor);
+  height: 50%;
+}
+
+.product-page--block:nth-child(2) {
+  background-color: var(--bgColor);
+  height: 100%;
+  margin-top: -1rem;
+  padding: 1rem;
+  padding-top: 0.5rem;
+  border-top-left-radius: 0.8rem;
+  border-top-right-radius: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 5;
+}
+
 #product-page header {
+  flex-shrink: 0;
   background-color: transparent;
+  height: 4rem;
   padding: 0 1rem;
   display: flex;
   align-items: center;
@@ -389,8 +414,8 @@ a.nav-selected {
 
 #product-page header button {
   background-color: var(--bgColor);
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   border: none;
   border-radius: 50%;
   display: grid;
@@ -399,8 +424,8 @@ a.nav-selected {
 }
 
 #product-page header button svg {
-  width: 24px;
-  height: 24px;
+  width: 1.5rem;
+  height: 1.5rem;
   fill: var(--textColor);
 }
 
@@ -433,38 +458,40 @@ a.nav-selected {
 
 .product-page-images {
   width: 100%;
-  height: 50%;
-  margin-top: -50px
+  height: 100%;
+  margin-top: -4rem;
 }
 
 .product-page-images img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0;
+}
+
+.product-page-images img.visible {
+  opacity: 1;
+  transition: opacity 500ms ease;
 }
 
 .product-page-info {
-  background-color: white;
-  padding: 1rem;
-  padding-bottom: 0;
-  border-top-left-radius: 0.8rem;
-  border-top-right-radius: 0.8rem;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  translate: 0 -1rem;
-  z-index: 5;
 }
 
 .product-page-info h2 {
   color: var(--titleColor);
   font-size: 1rem;
-  margin-bottom: 1rem;
+}
+
+.product-page-info hr {
+  margin:  0;
 }
 
 .product-page-info--stock {
-  margin-bottom: 0.5rem;
   display: flex;
+  align-items: center;
   justify-content: space-between;
 }
 
@@ -511,6 +538,7 @@ a.nav-selected {
 }
 
 .product-page-sizes {
+  margin: 0.5rem 0;
   display: flex;
   justify-content: center;
 }
@@ -528,6 +556,7 @@ a.nav-selected {
 }
 
 .product-page-picker {
+  margin-bottom: 1rem;
   padding: 0 2.4rem;
   display: flex;
 }
@@ -565,14 +594,14 @@ a.nav-selected {
 
 .product-page-actions {
   width: 100%;
-  margin-top: 1rem;
-  padding: 1rem;
+  margin-top: auto;
   display: flex;
   gap: 1rem;
   justify-content: center;
   position: sticky;
   bottom: 0;
   left: 0;
+  z-index: 5;
 }
 
 .product-page-actions button {
@@ -611,3 +640,99 @@ a.nav-selected {
   background: linear-gradient(to right bottom, #149c2b, #02570c);
 }
 
+
+@media (width > 700px) {
+  .nav {
+    width: min(300px, 100vw);
+    border-radius: 1.8rem;
+    left: 50%;
+    translate: -50% -1rem;
+    box-shadow: 0 4px 8px #0003;
+  }
+
+  .more-products {
+    height: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .more-products .product {
+    width: 260px;
+    height: 320px;
+    border-radius: 1.2rem;
+  }
+
+  .more-products .pdt-image {
+    height: 180px;
+  }
+
+  .more-products .pdt-price {
+    font-size: 1rem;
+  }
+
+  .more-products .product button {
+    margin-top: auto;
+    padding: 1.2rem;
+  }
+
+  #product-page {
+    background: #0008;
+    padding: 5vh max(10vw, 1rem);
+    flex-direction: row;
+    translate: 0;
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 200ms ease, visibility 300ms ease;
+  }
+
+  #product-page.active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 200ms ease;
+  }
+
+  .product-page--block:nth-child(1) {
+    width: 100%;
+    height: 100%;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    overflow: hidden;
+  }
+
+  .product-page--block:nth-child(2) {
+    margin: 0;
+    width: 100%;
+    padding: 2rem;
+    padding-top: 1.4rem;
+    border-top-left-radius: 0;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+
+  .product-page-info {
+    gap: 1.2rem;
+  }
+
+  .product-page-description {
+    font-size: 0.9rem;
+  }
+
+  .product-page-prices {
+    font-size: 1rem;
+  }
+
+  .product-page-actions {
+    gap: 1.5rem;
+  }
+
+  .product-page-actions button {
+    font-size: 1rem;
+    padding: 0.8rem;
+    border-radius: 1.4rem;
+  }
+}
