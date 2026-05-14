@@ -1,12 +1,14 @@
 import fs from 'node:fs'
 
 const initialProductCount = 15
-const productsPath = process.cwd() + "/server/db.json"
+const PATH = process.cwd() + "/server/db.json"
 
-export default class Products {
-  static #products = JSON.parse(fs.readFileSync(productsPath, 'utf-8'))
+const data = JSON.parse(fs.readFileSync(PATH, 'utf-8'))
 
-  static #bucle(array = [], to = 0, from = 0, hasLazyLoading = true) {
+export class Productos {
+  static data = JSON.parse(fs.readFileSync(PATH, 'utf-8'))
+
+  static bucle(array = [], to = 0, from = 0, hasLazyLoading = true) {
     let result = ''
 
     for (let i = to; i < from; i++) {
@@ -34,24 +36,26 @@ export default class Products {
     return result
   }
 
-  static initLoad(type = null) {
-    let filter = [...this.#products]
+  static cargaInicial(type = null) {
+    let filter = [...this.data]
 
     if (type) {
-      filter = this.#products.filter(p => p.type == type)
+      filter = this.data.filter(p => p.type == type)
     }
 
-    let result = this.#bucle(filter, 0, 6, false)
-    result += this.#bucle(filter, 6, initialProductCount)
+    let result = this.bucle(filter, 0, 6, false)
+    result += this.bucle(filter, 6, initialProductCount)
     //TODO: contador de productos cargados para no mandar los mismos siempre
     return result
   }
 
   static get() {
-    return this.#products
+    return this.data
   }
 
   static refresh() {
-    this.#products = JSON.parse(fs.readFileSync(productsPath, 'utf-8'))
+    this.data = JSON.parse(fs.readFileSync(PATH, 'utf-8'))
   }
 }
+
+export default data

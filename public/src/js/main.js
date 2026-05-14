@@ -40,32 +40,19 @@ page.onclick = e => {
 
   productPage.classList.add('active')
 
-  const myUrl = "/product/" + parserURL(PPE.title.textContent)
+  const myUrl = `/product/${id}/${parserURL(PPE.title.textContent)}`
   if (location.pathname !== myUrl) history.pushState(null, "", myUrl)
 }
 
 function parserURL(text) {
-  let array = text.toLowerCase().split(' ')
-  let finalText = ""
-
-  const len = array.length - 1
-
-  for (let i = 0; i < len; i++) {
-    finalText += array[i] + "-"
-  }
-
-  finalText += array[len]
-
-  //Eliminar simbolos
-  const symbols = ['/', '?', '&', '.', '-', '!']
-
-  symbols.forEach(s => {
-    const array = finalText.split(s)
-    finalText = ""
-    for (let i = 0; i < array.length; i++) finalText += array[i]
-  })
-
-  return finalText
+  return text
+  .toLowerCase()
+  .normalize("NFD") // separa acentos
+  .replace(/[\u0300-\u036f]/g, "") // elimina acentos
+  .replace(/[^a-z0-9\s-]/g, "") // elimina símbolos
+  .trim()
+  .replace(/\s+/g, "-") // espacios -> -
+  .replace(/-+/g, "-"); // evita ---
 }
 
 window.onpopstate = () => {

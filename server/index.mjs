@@ -1,7 +1,7 @@
 import express from 'express'
-import pool from './db.mjs'
-// import Products from './Products.mjs'
-// import { filtrarCompartidos } from './productsShared.mjs'
+import sql from './db.mjs'
+
+import data from './Productos.mjs'
 
 const app = express()
 const port = 5500 //
@@ -10,12 +10,13 @@ app.use(express.static('public'))
 app.use(express.json())
 
 app.set('view engine', 'ejs')
-app.set('views', './views')
+app.set('views', './server/views')
 
 // app.get('/', (req, res) => {
 //   const result = Products.initLoad()
 //   res.render('index', { result })
 // })
+
 
 //CARGAR ARTICULOS
 // import fs from 'node:fs'
@@ -25,12 +26,10 @@ app.get('/', (req, res) => {
   res.sendFile(process.cwd() + '/public/index.html')
 })
 
-app.get('/product/:slug', (req, res) => {
-  // const id = req.query.id
-  // const product = ARTICULOS.find(a => a.id === id)
-
-  res.sendFile(process.cwd() +'/public/src/html/articulo.html')
-  // res.render('articulo', { product })
+app.get('/product/:id/:slug', (req, res) => {
+  const product = data[req.params.id - 1]
+  product.ogImage = product.image.split(' 533w')[0].split(' 360w')[1].slice(1)
+  res.render('articulo', { product })
 })
 
 app.get('/:slug', (req, res) => {

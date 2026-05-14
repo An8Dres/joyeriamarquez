@@ -111,6 +111,8 @@
 
   <script>
     window.onpopstate = e => { if (location.pathname === '/') location.reload() }
+    const img = document.querySelector('.product-page-images img')
+    img.onload = () => img.classList.add('visible')
   </script>
 </body>
 </html>
