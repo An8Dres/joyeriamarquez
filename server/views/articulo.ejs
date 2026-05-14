@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Descubre joyería fina hecha a mano. Anillos de compromiso, collares y pulseras en oro y plata. Diseños únicos para momentos inolvidables. Compra online.">
+  <meta property="og:title" content="JOYERIA MARQUEZ">
+  <meta property="og:description" content="<%= product.title %>">
+  <meta property="og:image" content="https://an8dres.github.io/joyeriamarquez/src/iconos/preview.png">
+  
+  <meta property="og:url" content="https://an8dres.github.io/joyeriamarquez">
+  <meta property="og:type" content="website">
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:domain" content="an8dres.github.io">
+  <meta property="twitter:url" content="https://an8dres.github.io/joyeriamarquez/">
+  <meta name="twitter:title" content="JOYERIA MARQUEZ">
+  <meta name="twitter:description" content="<%= product.title %>">
+  <meta name="twitter:image" content="https://an8dres.github.io/joyeriamarquez/src/iconos/preview.png">
+    
+  <link rel="stylesheet" href="/src/css/style.css">
+  <link rel="icon" href="/src/iconos/icon.png">
+  <!-- <script type="module" defer src="/src/js/main.js"></script> -->
+  <title>Joyería Márquez</title>
+</head>
+<body style="background-color: #fff;">
+  <article id="product-page" class="active">
+    <section class="product-page--block">
+      <header>
+        <button id="btn-back" aria-label="go back">
+          <svg id="btn-back" area-hidden="true"><use href="#icon-arrowback"></use></svg>
+        </button>
+        <div>
+          <button id="btn-fav" aria-label="add to favorite">
+            <svg area-hidden="true"><use href="#icon-favorite"></use></svg>
+            <svg area-hidden="true"><use href="#icon-favorite-filled"></use></svg>
+          </button>
+          <button id="btn-share" aria-label="share product">
+            <svg area-hidden="true"><use href="#icon-share"></use></svg>
+          </button>
+        </div>
+      </header>
+      <div class="product-page-images">
+        <img sizes="max(500px, 60vw)" alt="product image" srcset="<%= product.image %>">
+      </div>
+    </section>
+    <section class="product-page--block">
+      <div class="product-page-info">
+        <h2><%= product.title %></h2>
+        <hr>
+        <div class="product-page-info--stock">
+          <div class="product-page-type">
+            <svg area-hidden="true"><use href="#icon-star-filled"></use></svg>
+            <span><%= product.type %></span>
+          </div>
+          <span class="product-page-stock">Stock 100</span>
+        </div>
+        <div class="product-page-prices">
+          <span class="price">$ <%= product.price %></span>
+          <s class="lastprice">$ <%= product.price %></s>
+        </div>
+        <p class="product-page-description"><%= product.info %></p>
+      </div>
+      <div class="product-page-sizes">
+        <label tabindex="0"><input type="radio" name="sizes">S</label>
+        <label tabindex="0"><input type="radio" name="sizes">M</label>
+        <label tabindex="0"><input type="radio" name="sizes">L</label>
+        <label tabindex="0"><input type="radio" name="sizes">XL</label>
+      </div>
+      <div class="product-page-picker">
+        <button id="btn-menos">-</button>
+        <input id="input-cantidad" type="number" value="1">
+        <button id="btn-mas">+</button>
+      </div>
+      <aside class="product-page-actions">
+        <button id="btn-add">
+          Agregar
+          <svg area-hidden="true"><use href="#icon-cart-out"></use></svg>
+        </button>
+        <button id="btn-buy">
+          Whatsapp
+          <svg area-hidden="true"><use href="#icon-cart-filled"></use></svg>
+        </button>
+      </aside>
+    </section>
+  </article>
+
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
+    <symbol id="icon-cart-filled" viewBox="0 -960 960 960">
+      <path d="M236.58-118.12q-20.42-20.42-20.42-49.57 0-29.16 20.42-49.58 20.42-20.42 49.57-20.42 29.16 0 49.58 20.42 20.42 20.42 20.42 49.58 0 29.15-20.42 49.57-20.42 20.43-49.58 20.43-29.15 0-49.57-20.43Zm387.69 0q-20.42-20.42-20.42-49.57 0-29.16 20.42-49.58 20.42-20.42 49.58-20.42 29.15 0 49.57 20.42t20.42 49.58q0 29.15-20.42 49.57Q703-97.69 673.85-97.69q-29.16 0-49.58-20.43ZM211.85-790h555.38q24.54 0 37.11 20.89 12.58 20.88 1.2 42.65L677.38-494.31q-9.84 17.31-26.03 26.96-16.2 9.66-35.5 9.66H324l-46.31 84.61q-3.08 4.62-.19 10 2.88 5.39 8.65 5.39h427.7q12.76 0 21.38 8.61 8.61 8.62 8.61 21.39 0 12.77-8.61 21.38-8.62 8.62-21.38 8.62h-427.7q-40 0-60.11-34.5-20.12-34.5-1.42-68.89l57.07-102.61L136.16-810H90q-12.77 0-21.38-8.62Q60-827.23 60-840t8.62-21.38Q77.23-870 90-870h61.15q10.24 0 19.08 5.42 8.85 5.43 13.46 15.27L211.85-790Z"/>
+    </symbol>
+    <symbol id="icon-favorite" viewBox="0 -960 960 960">
+      <path d="M453.81-176.23q-12.96-4.62-22.81-14.46l-57.46-52.23q-106.38-97-189.96-190.58Q100-527.08 100-634q0-85.15 57.42-142.58Q214.85-834 300-834q48.38 0 95.58 22.31 47.19 22.31 84.42 72.46 37.23-50.15 84.42-72.46Q611.62-834 660-834q85.15 0 142.58 57.42Q860-719.15 860-634q0 108.08-85 202.73-85 94.65-189.54 188.96l-56.85 51.62q-9.84 9.84-22.99 14.46-13.16 4.61-26 4.61-12.85 0-25.81-4.61Zm-2.58-502.23q-32.46-49.46-68.35-72.5Q347-774 300-774q-60 0-100 40t-40 100q0 48.15 31.04 100.69t77.92 104.46q46.88 51.93 101.58 101.46 54.69 49.54 101.38 92.08 3.46 3.08 8.08 3.08t8.08-3.08q46.69-42.54 101.38-92.08 54.7-49.53 101.58-101.46 46.88-51.92 77.92-104.46Q800-585.85 800-634q0-60-40-100t-100-40q-47 0-82.88 23.04-35.89 23.04-68.35 72.5-5.08 7.69-12.77 11.54-7.69 3.84-16 3.84-8.31 0-16-3.84-7.69-3.85-12.77-11.54ZM480-502.54Z"/>
+    </symbol>
+    <symbol id="icon-favorite-filled" viewBox="0 -960 960 960">
+      <path d="M453.81-176.23q-12.96-4.62-22.81-14.46l-57.46-52.23q-106.38-97-189.96-190.58Q100-527.08 100-634q0-85.15 57.42-142.58Q214.85-834 300-834q48.38 0 95.58 22.31 47.19 22.31 84.42 72.46 37.23-50.15 84.42-72.46Q611.62-834 660-834q85.15 0 142.58 57.42Q860-719.15 860-634q0 108.08-85 202.73-85 94.65-189.54 188.96l-56.85 51.62q-9.84 9.84-22.99 14.46-13.16 4.61-26 4.61-12.85 0-25.81-4.61Z"/>
+    </symbol>
+    <symbol id="icon-star-filled" viewBox="0 -960 960 960">
+      <path d="m480-292.46-155.61 93.84q-8.7 5.08-17.43 4.27-8.73-.81-15.8-5.88-7.08-5.08-10.93-13.27-3.84-8.19-1.23-18.12l41.31-176.69-137.38-118.92q-7.7-6.69-9.81-15.5-2.12-8.81 1.11-17.12 3.23-8.3 9.31-13.57t16.62-6.89l181.3-15.84L451.85-763q3.84-9.31 11.65-13.77 7.81-4.46 16.5-4.46 8.69 0 16.5 4.46 7.81 4.46 11.65 13.77l70.39 166.85 181.3 15.84q10.54 1.62 16.62 6.89 6.08 5.27 9.31 13.57 3.23 8.31 1.11 17.12-2.11 8.81-9.81 15.5L639.69-408.31 681-231.62q2.61 9.93-1.23 18.12-3.85 8.19-10.93 13.27-7.07 5.07-15.8 5.88-8.73.81-17.43-4.27L480-292.46Z"/>
+    </symbol>
+    <symbol id="icon-arrowback" viewBox="0 -960 960 960">
+      <path d="m294.92-450 206.77 206.77q8.92 8.92 8.81 20.88-.12 11.96-9.42 21.27-9.31 8.69-21.08 9-11.77.31-21.08-9L205.31-454.69q-5.62-5.62-7.92-11.85-2.31-6.23-2.31-13.46t2.31-13.46q2.3-6.23 7.92-11.85l253.61-253.61q8.31-8.31 20.58-8.5 12.27-.19 21.58 8.5 9.3 9.31 9.3 21.38 0 12.08-9.3 21.39L294.92-510H750q12.77 0 21.38 8.62Q780-492.77 780-480t-8.62 21.38Q762.77-450 750-450H294.92Z"/>
+    </symbol>
+    <symbol id="icon-share" viewBox="0 -960 960 960">
+      <path d="M252.31-100Q222-100 201-121q-21-21-21-51.31v-375.38Q180-578 201-599q21-21 51.31-21h72.31q12.76 0 21.38 8.62 8.61 8.61 8.61 21.38T346-568.62q-8.62 8.62-21.38 8.62h-72.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v375.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85h455.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-375.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85h-72.31q-12.76 0-21.38-8.62-8.61-8.61-8.61-21.38t8.61-21.38q8.62-8.62 21.38-8.62h72.31Q738-620 759-599q21 21 21 51.31v375.38Q780-142 759-121q-21 21-51.31 21H252.31Zm206.31-238.62Q450-347.23 450-360v-411.23l-52.92 52.92q-8.93 8.93-20.89 8.81-11.96-.11-21.27-9.42-8.69-9.31-9-21.08-.3-11.77 9-21.07l99.77-99.77q5.62-5.62 11.85-7.93 6.23-2.3 13.46-2.3t13.46 2.3q6.23 2.31 11.85 7.93l99.77 99.77q8.3 8.3 8.5 20.57.19 12.27-8.5 21.58-9.31 9.31-21.39 9.31-12.07 0-21.38-9.31L510-771.23V-360q0 12.77-8.62 21.38Q492.77-330 480-330t-21.38-8.62Z"/>
+    </symbol>
+    <symbol id="icon-cart-out" viewBox="0 -960 960 960">
+      <path d="M236.58-118.12q-20.42-20.42-20.42-49.57 0-29.16 20.42-49.58 20.42-20.42 49.57-20.42 29.16 0 49.58 20.42 20.42 20.42 20.42 49.58 0 29.15-20.42 49.57-20.42 20.43-49.58 20.43-29.15 0-49.57-20.43Zm387.69 0q-20.42-20.42-20.42-49.57 0-29.16 20.42-49.58 20.42-20.42 49.58-20.42 29.15 0 49.57 20.42t20.42 49.58q0 29.15-20.42 49.57Q703-97.69 673.85-97.69q-29.16 0-49.58-20.43ZM136.16-810H90q-12.77 0-21.38-8.62Q60-827.23 60-840t8.62-21.38Q77.23-870 90-870h61.77q10.23 0 19.08 5.42 8.84 5.43 13.46 15.27l157.07 331.62h272.7q3.46 0 6.15-1.73 2.69-1.73 4.62-4.81L764.46-775q3.85-7.31 10.54-11.15 6.69-3.85 15-3.85 17.23 0 25.84 14.69 8.62 14.69.31 29.69L677.38-494.31q-9.84 17.31-26.03 26.96-16.2 9.66-35.5 9.66H324l-46.31 84.61q-3.08 4.62-.19 10 2.88 5.39 8.65 5.39h427.7q12.76 0 21.38 8.61 8.61 8.62 8.61 21.39 0 12.77-8.61 21.38-8.62 8.62-21.38 8.62h-427.7q-40 0-60.42-34.2-20.42-34.19-1.11-69.19l57.07-102.61L136.16-810Zm375.46 120H360q-12.77 0-21.38-8.62Q330-707.23 330-720t8.62-21.38Q347.23-750 360-750h151.62l-53.31-53.31q-8.92-8.92-8.62-20.69.31-11.77 9.23-20.69 8.93-8.31 20.89-8.62 11.96-.3 20.88 8.62l99.77 99.38q10.85 10.85 10.85 25.31 0 14.46-10.85 25.31l-99.77 99.77q-8.31 8.3-20.38 8.42-12.08.11-21-8.81-8.31-8.31-8.31-20.88 0-12.58 8.31-20.89L511.62-690Z"/>
+    </symbol>
+  </svg>
+</body>
+</html>
