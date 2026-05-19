@@ -3,7 +3,7 @@ import postgres from 'postgres'
 
 dotenv.config()
 
-const sql = new postgres({
+const sql = postgres({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   username: process.env.DB_USER,

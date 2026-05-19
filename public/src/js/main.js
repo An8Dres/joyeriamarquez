@@ -134,3 +134,7 @@ const data = await fetch('/src/js/db.json')
 const json = await data.json()
 
 insertItems(json)
+
+import Format from './utils/Format.js'
+
+window.Format = Format

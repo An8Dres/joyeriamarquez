@@ -2,6 +2,7 @@ import express from 'express'
 import sql from './db.mjs'
 
 import data from './Productos.mjs'
+import Format from './Format.mjs'
 
 const app = express()
 const port = 5500 //
@@ -16,11 +17,6 @@ app.set('views', './server/views')
 //   const result = Products.initLoad()
 //   res.render('index', { result })
 // })
-
-
-//CARGAR ARTICULOS
-// import fs from 'node:fs'
-// const ARTICULOS = JSON.parse(fs.readFileSync(process.cwd() + '/server/db.json', 'utf-8'))
 
 app.get('/', (req, res) => {
   res.sendFile(process.cwd() + '/public/index.html')
@@ -37,7 +33,7 @@ app.get('/:slug', (req, res) => {
 
   switch (slug) {
     case 'product': {
-      res.sendFile(process.cwd() +'/public/index.html')
+      res.sendFile(process.cwd() + '/public/index.html')
     }
     case 'order': {
       //TODO: arreglar el que pasen el mismo producto de nuevo por la URL (Se muestra separado y no contado en un solo item) order?t=3,1,3 -> order?t=3:2,1
@@ -51,21 +47,19 @@ app.get('/:slug', (req, res) => {
       // const info = filtrarCompartidos(orderProducts)
       // res.render('productsShared', { info })
     }
-    break
+      break
     case 'makeup':
       const result = Products.initLoad('makeup')
       res.render('makeup', { result })
-    break
+      break
     case 'accessories':
       res.render('accessories')
     case 'bag':
       res.sendFile(process.cwd() + '/public/html/bag.html')
-    break
+      break
     default:
-      res.send(slug)
-      // const product = Products.get().find(p => p.slug === slug)
-      // if (!product) return res.status(404).sendFile(process.cwd() + '/public/html/notFound.html')
-      // res.render('product', { product })
+      res.redirect('/')
+    // return res.status(404).sendFile(process.cwd() + '/public/html/notFound.html')
   }
 })
 
@@ -82,3 +76,28 @@ app.post('/refresh-products', () => {
 app.listen(port, () => {
   console.log("Server listen on port", port)
 })
+
+
+import fs from 'node:fs'
+const ARTICULOS = JSON.parse(fs.readFileSync(process.cwd() + '/server/db.json', 'utf-8'))
+
+function parserURL(text) {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+}
+
+//Formato colombiano
+async function agregarTodos() {
+  for (const a of ARTICULOS) {
+    const query = await sql`INSERT INTO productos (titulo, info, imagen_src, precio, precio_anterior, tipo, stock) VALUES
+    (${a.title}, ${a.info}, ${a.image}, ${Format.parseNumber(a.price)}, ${Format.parseNumber(a.price) + 20000}, ${a.type}, ${(Math.random() * 100) | 0});`
+  }
+}
+
+agregarTodos()
