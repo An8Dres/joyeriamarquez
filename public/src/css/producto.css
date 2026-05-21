@@ -1,0 +1,374 @@
+#product-page {
+  flex-shrink: 0;
+  will-change: translate;
+  background-color: var(--bgColor);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  translate: 100%;
+  z-index: 4;
+  transition: translate .2s ease;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+#product-page.active {
+  translate: 0;
+}
+
+.product-page--block:nth-child(1) {
+  background-color: var(--bgColor);
+  height: 50%;
+}
+
+.product-page--block:nth-child(2) {
+  background-color: var(--bgColor);
+  height: 100%;
+  margin-top: -1rem;
+  padding: 1rem;
+  padding-top: 0.5rem;
+  border-top-left-radius: 0.8rem;
+  border-top-right-radius: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 5;
+}
+
+#product-page header {
+  flex-shrink: 0;
+  background-color: transparent;
+  height: 4rem;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: none;
+  position: sticky;
+}
+
+#product-page header button {
+  background-color: var(--bgColor);
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+#product-page header button svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: var(--textColor);
+}
+
+#product-page header div {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#btn-back:active svg {
+  fill: var(--mainColor);
+  scale: 1.1;
+}
+
+#btn-fav {
+  padding-top: 0.18rem;
+}
+
+#btn-fav svg:nth-child(2) {
+  display: none;
+}
+
+#btn-fav.active svg:nth-child(1) {
+  display: none
+}
+
+#btn-fav.active svg:nth-child(2) {
+  display: block;
+  fill: var(--favColor);
+}
+
+#btn-fav:active svg {
+  scale: 1.1;
+}
+
+#btn-share:active svg {
+  fill: green;
+  scale: 1.1;
+}
+
+.product-page-images {
+  width: 100%;
+  height: 100%;
+  margin-top: -4rem;
+  display: flex;
+  position: relative;
+}
+
+.product-page-images img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  text-align: center;
+}
+
+.product-page-images img.visible {
+  opacity: 1;
+  transition: opacity 500ms ease-out;
+}
+
+.product-page-images .spin {
+  width: 3rem;
+  height: 3rem;
+  border: 0.3rem solid #b5cebb;
+  border-top-color: transparent;
+  border-radius: 50%;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  animation: rotate 500ms infinite linear;
+  transition: opacity 200ms ease, visiblity 250ms ease;
+}
+
+.product-page-images .spin.hidden {
+  animation: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+@keyframes rotate {
+ to {
+  rotate: 360deg
+ }
+}
+
+.product-page-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.product-page-info h2 {
+  color: var(--titleColor);
+  font-size: 1rem;
+}
+
+.product-page-info hr {
+  margin:  0;
+}
+
+.product-page-info--stock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.product-page-type {
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+}
+
+.product-page-type svg {
+  fill: var(--textColor);
+  width: 24px;
+  height: 24px;
+}
+
+.product-page-stock {
+  font-weight: bold;
+  font-size: 0.8rem;
+  background-color: #d5ffaa;
+  color: #335f11;
+  height: 1.2rem;
+  padding: 0 0.4rem;
+  border-radius: 0.4rem;
+  display: flex;
+  align-items: center;
+}
+
+.product-page-prices {
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+.lastprice {
+  color: var(--textColor);
+}
+
+.product-page-description {
+  font-size: 0.8rem;
+  color: var(--textColor);
+  text-align: center;
+}
+
+.product-page-sizes {
+  margin: 0.5rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.product-page-sizes input {
+  accent-color: var(--mainColor);
+  cursor: pointer;
+}
+
+.product-page-sizes label {
+  padding: 0.6rem;
+  display: flex;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+.product-page-picker {
+  margin-bottom: 1rem;
+  padding: 0 2.4rem;
+  display: flex;
+}
+
+.product-page-picker input {
+  font-size: 1.2rem;
+  font-weight: bold;
+  width: 2rem;
+  height: 1.8rem;
+  border: none;
+  outline: none;
+  text-align: center;
+}
+
+.product-page-picker input::-webkit-inner-spin-button {
+  display: none;
+}
+
+.product-page-picker button {
+  font-family: Poppins;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background-color: var(--textColor);
+  color: var(--bgColor);
+  width: 1.8rem;
+  height: 1.8rem;
+  border: none;
+  border-radius: 0.8rem;
+  cursor: pointer;
+}
+
+.product-page-picker button:hover {
+  background-color: var(--mainColor);
+}
+
+.product-page-actions {
+  width: 100%;
+  margin-top: auto;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+}
+
+.product-page-actions button {
+  font-weight: bold;
+  background: var(--titleColor);
+  color: var(--bgColor);
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  transition: translate 150ms ease;
+}
+
+.product-page-actions button svg {
+  fill: #fff;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  transition: rotate 150ms ease;
+}
+
+.product-page-actions button:hover {
+  translate: 0 -5%;
+}
+
+.product-page-actions button:hover svg {
+  rotate: -10deg
+}
+
+@media (width > 700px) {
+  #product-page {
+    background: #0008;
+    padding: 5vh max(10vw, 1rem);
+    flex-direction: row;
+    translate: 0;
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 200ms ease, visibility 300ms ease;
+  }
+
+  #product-page.active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 200ms ease;
+  }
+
+  .product-page--block:nth-child(1) {
+    width: 100%;
+    height: 100%;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    overflow: hidden;
+  }
+
+  .product-page--block:nth-child(2) {
+    margin: 0;
+    width: 100%;
+    padding: 2rem;
+    padding-top: 1.4rem;
+    border-top-left-radius: 0;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+
+  .product-page-info {
+    gap: 1.2rem;
+  }
+
+  .product-page-description {
+    font-size: 0.9rem;
+  }
+
+  .product-page-prices {
+    font-size: 1rem;
+  }
+
+  .product-page-actions {
+    gap: 1.5rem;
+  }
+
+  .product-page-actions button {
+    font-size: 1rem;
+    padding: 0.8rem;
+    border-radius: 1.4rem;
+  }
+}

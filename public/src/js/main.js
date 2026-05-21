@@ -6,7 +6,10 @@ const btnFav = productPage.querySelector('#btn-fav')
 const inputCantidad = document.getElementById('input-cantidad')
 const btnMenos = document.getElementById('btn-menos')
 const btnMas = document.getElementById('btn-mas')
+const btnCompartir = document.getElementById('btn-share')
+const spin = document.querySelector('.spin')
 
+history.scrollRestoration = 'manual'
 
 const PPE = { //PRoduct Page Elements
   __proto__: null,
@@ -14,34 +17,51 @@ const PPE = { //PRoduct Page Elements
   image: productPage.querySelector('img'),
   price: productPage.querySelector('.price'),
   lastprice: productPage.querySelector('.lastprice'),
+  stock: productPage.querySelector('.product-page-stock'),
   type: productPage.querySelector('.product-page-type span'),
-  description: productPage.querySelector('.product-page-description')
+  description: productPage.querySelector('.product-page-description'),
 }
 
 let lastLoaded = 0
 let isLoaded = false
 
 page.onclick = e => {
-  PPE.image.classList.remove('visible')
   const i = e.target.closest('.product')
+
   if (!i) return
+
   const id = i.dataset.id
+  const image = PPE.image
+
   if (id  !== lastLoaded) {
     lastLoaded = id
-    PPE.image.srcset = i.querySelector('img').srcset
+    //Reiniciar estilos
+    spin.classList.remove('hidden')
+    image.srcset = i.querySelector('img').srcset
+    if (!image.complete) image.classList.remove('visible')
+
+    const pInfo = i.querySelector('.pdt-info').dataset
+    PPE.type.textContent = pInfo.type
+    PPE.stock.textContent = "Stock " + pInfo.stock
     PPE.title.textContent = i.querySelector('.pdt-name').textContent
     PPE.price.textContent = i.querySelector('b').textContent
     PPE.lastprice.textContent = i.querySelector('s').textContent
-    PPE.type.textContent = i.querySelector('.pdt-info').dataset.type
     PPE.description.textContent = i.querySelector('.pdt-name--extra').textContent
   } else {
-    PPE.image.classList.add('visible')
+    image.classList.add('visible')
   }
 
   productPage.classList.add('active')
 
   const myUrl = `/product/${id}/${parserURL(PPE.title.textContent)}`
-  if (location.pathname !== myUrl) history.pushState(null, "", myUrl)
+
+  if (location.pathname !== myUrl) {
+    if (history.state && history.state.esArticulo) {
+      history.replaceState({ esArticulo: true }, "", myUrl)
+    } else {
+      history.pushState({ esArticulo: true }, "", myUrl)
+    }
+  }
 }
 
 function parserURL(text) {
@@ -55,16 +75,27 @@ function parserURL(text) {
   .replace(/-+/g, "-"); // evita ---
 }
 
-window.onpopstate = () => {
-  if (location.pathname.includes('/product/')) productPage.classList.add('active')
+window.onpopstate = ()=> {
+  if (location.pathname.includes('/product/')) {
+    productPage.classList.add('active')
+    // TODO: if (lastLoaded === 0) cargarUnicoProducto(id)
+  }
   else productPage.classList.remove('active')
 }
 
-PPE.image.onload = () => PPE.image.classList.add('visible')
+PPE.image.onload = ()=> {
+  PPE.image.classList.add('visible')
+  spin.classList.add('hidden')
+}
 
-btnBack.onclick = () => history.back()
+import hola from "./cargaScroll.js"
+import Notify from "./utils/Notify.js"
 
-btnFav.onclick = () => btnFav.classList.toggle('active')
+btnBack.onclick = ()=> history.back()
+
+btnFav.onclick = ()=> btnFav.classList.toggle('active')
+
+btnCompartir.onclick = ()=> Notify.show({ title: "¡Enlace copiado!", text: "Enlace copiado al portapapeles.", handler: () => navigator.clipboard.writeText(location.href) })
 
 productPage.onclick = e => {
   const i = e.target
@@ -83,16 +114,16 @@ productPage.onclick = e => {
 let lastScroll = window.scrollY
 const header = document.querySelector('header')
 
-window.onscroll = e => {
+window.addEventListener('scroll', e => {
   if (window.scrollY > lastScroll) header.classList.add('ocultar')
   else header.classList.remove('ocultar')
   lastScroll = window.scrollY
-}
+})
 
 //Whatsapp
 const btnWhatsapp = productPage.querySelector('#btn-buy')
 btnWhatsapp.onclick = e => {
-  let message = `¡Hola! Quiero comprar esto: ${PPE.title.textContent}`
+  let message = `¡Hola! Quiero comprar esto: ${location.href}`
   window.open(`https://wa.me/573243571105?text=${encodeURIComponent(message)}`, '_blank')
 }
 
@@ -100,14 +131,8 @@ btnWhatsapp.onclick = e => {
 const Templates = document.querySelector('.templates')
 const tmpProduct = Templates.querySelector('template').content
 
-function insertItems(array, config = null) {
-  let init = config?.init || 0
-  let len = config?.offset
-
-  if (len) len += init
-  else len = array.length
-
-  for (let i = init; i < len; i++) {
+function insertarProductos(array) {
+  for (let i = 0; i < array.length; i++) {
     const tmp = tmpProduct.cloneNode(true).querySelector('.product')
     const im = tmp.querySelector('img')
     const n = tmp.querySelector('.pdt-name')
@@ -119,22 +144,29 @@ function insertItems(array, config = null) {
     const e = array[i]
     
     tmp.dataset.id = e.id
-    info.dataset.type = e.type
-    im.srcset = e.image
-    n.textContent = e.title
+    info.dataset.type = e.tipo
+    info.dataset.stock = e.stock
+    im.srcset = e.main_image_id
+    n.textContent = e.titulo
     d.textContent = e.info
-    p.textContent = "$ " + e.price
-    lp.textContent = "$ " + e.price
+    p.textContent = "$ " + e.precio
+    lp.textContent = "$ " + e.precio_anterior
+
 
     moreProducts.appendChild(tmp)
   }
 }
 
-const data = await fetch('/src/js/db.json')
-const json = await data.json()
+async function cargarProductos(offset) {
+  const query = await fetch('/productos', { 
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain'},
+    body: offset || 0 
+  })
+  const data = await query.json()
+  return data
+}
 
-insertItems(json)
+insertarProductos(await cargarProductos())
 
-import Format from './utils/Format.js'
-
-window.Format = Format
+export { cargarProductos, insertarProductos }

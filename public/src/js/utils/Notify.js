@@ -1,19 +1,24 @@
-import { notify } from '../dom.js'
-
+const notifyElement = document.querySelector('.notify')
 let timeOutId = undefined
 
-export default class Notify {
-  static async show({title = 'Notify', text = 'This is a notify', type = 0, handler = () => {}}) {
-    notify.classList.remove('open')
+const Notify = {
+  __proto__: null,
+
+  async show({title = 'Notify', text = 'This is a notify', type = 0, handler = () => {}}) {
+    notifyElement.classList.remove('open')
     try {
       handler()
       clearTimeout(timeOutId)
-      notify.querySelector('.notify-title').innerText = title
-      notify.querySelector('.notify-text').innerText = text
-      setTimeout(() => {notify.classList.add('open')}, 20)
-      timeOutId = setTimeout(() => {notify.classList.remove('open')}, 5000)
+      notifyElement.querySelector('.notify-title').innerText = title
+      notifyElement.querySelector('.notify-text').innerText = text
+      setTimeout(()=> {notifyElement.classList.add('open')}, 20)
+      timeOutId = setTimeout(()=> {notifyElement.classList.remove('open')}, 5000)
     } catch (err) {
       console.error('No se pudo monstrar la notificación: ', err)
     }
   }
 }
+
+notifyElement.querySelector('.notify-btn').onclick = ()=> notifyElement.classList.remove('open')
+
+export default Notify

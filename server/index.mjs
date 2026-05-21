@@ -1,13 +1,12 @@
 import express from 'express'
+import Format from './Format.mjs'
 import sql from './db.mjs'
 
-import data from './Productos.mjs'
-import Format from './Format.mjs'
-
 const app = express()
-const port = 5500 //
+const port = 5500
 
 app.use(express.static('public'))
+app.use(express.text())
 app.use(express.json())
 
 app.set('view engine', 'ejs')
@@ -22,10 +21,13 @@ app.get('/', (req, res) => {
   res.sendFile(process.cwd() + '/public/index.html')
 })
 
-app.get('/product/:id/:slug', (req, res) => {
-  const product = data[req.params.id - 1]
-  product.ogImage = product.image.split(' 533w')[0].split(' 360w')[1].slice(1)
-  res.render('articulo', { product })
+app.get('/product/:id/:slug', async (req, res) => {
+  const PRODUCTO = (await sql`SELECT * FROM productos WHERE id = ${req.params.id}`)[0]
+  PRODUCTO.ogImage = `https://napoleonejoyas.co/cdn/shop/files/${PRODUCTO.main_image_id}_x533.jpg` //CDN
+  PRODUCTO.main_image_id = createBaseImageURL(PRODUCTO.main_image_id)
+  PRODUCTO.precio = Format.formatNumber(PRODUCTO.precio)
+  PRODUCTO.precio_anterior = Format.formatNumber(PRODUCTO.precio_anterior)
+  res.render('producto', { PRODUCTO })
 })
 
 app.get('/:slug', (req, res) => {
@@ -63,23 +65,19 @@ app.get('/:slug', (req, res) => {
   }
 })
 
+app.post('/productos', async (req, res) => {
+  res.send(await getProductos(req.body))
+})
+
 app.post('/bag-items', (req, res) => {
   const ids = req.body.ids
   const filters = Products.get().filter(p => ids.includes(p.id))
   res.json(filters)
 })
 
-app.post('/refresh-products', () => {
-  Products.refresh()
-})
-
 app.listen(port, () => {
   console.log("Server listen on port", port)
 })
-
-
-import fs from 'node:fs'
-const ARTICULOS = JSON.parse(fs.readFileSync(process.cwd() + '/server/db.json', 'utf-8'))
 
 function parserURL(text) {
   return text
@@ -92,12 +90,32 @@ function parserURL(text) {
     .replace(/-+/g, "-")
 }
 
-//Formato colombiano
-async function agregarTodos() {
-  for (const a of ARTICULOS) {
-    const query = await sql`INSERT INTO productos (titulo, info, imagen_src, precio, precio_anterior, tipo, stock) VALUES
-    (${a.title}, ${a.info}, ${a.image}, ${Format.parseNumber(a.price)}, ${Format.parseNumber(a.price) + 20000}, ${a.type}, ${(Math.random() * 100) | 0});`
+function createBaseImageURL(id) {
+  const IMG_SIZES = ['165', '360', '533', '720', '940']
+  let url = ""
+  for (let i = 0; i < IMG_SIZES.length; i++) {
+    const SIZE = IMG_SIZES[i]
+    url += `//napoleonejoyas.co/cdn/shop/files/${id}_x${SIZE}.jpg ${SIZE}w, ` // CDN/image.jpg
   }
+  return url.substring(0, url.length - 2)
 }
 
-agregarTodos()
+async function getProductos(offset = 0) {
+  const productos = await sql`SELECT * FROM productos LIMIT 20 OFFSET ${offset}`
+  for (let i = 0; i < productos.length; i++) {
+    const p = productos[i]
+    p.main_image_id = createBaseImageURL(p.main_image_id)
+    p.precio = Format.formatNumber(p.precio)
+    p.precio_anterior = Format.formatNumber(p.precio_anterior)
+  }
+  return productos;
+}
+
+//Formato colombiano | Agrega productos de JSON a la DB
+async function fillDB() {
+  for (const a of ARTICULOS) {
+    let imageName = a.image.split('_165x')[0].slice(35).trim()
+    const query = await sql`INSERT INTO productos (titulo, info, main_image_id, precio, precio_anterior, tipo, stock) VALUES
+    (${a.title}, ${a.info}, ${imageName}, ${Format.parseNumber(a.price)}, ${Format.parseNumber(a.price) + 20000}, ${a.type}, ${(Math.random() * 100) | 0});`
+  }
+}
