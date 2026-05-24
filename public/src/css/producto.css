@@ -15,7 +15,7 @@
   overscroll-behavior: contain;
 }
 
-#product-page.active {
+#product-page.visible {
   translate: 0;
 }
 
@@ -326,7 +326,7 @@
     transition: opacity 200ms ease, visibility 300ms ease;
   }
 
-  #product-page.active {
+  #product-page.visible {
     opacity: 1;
     visibility: visible;
     transition: opacity 200ms ease;

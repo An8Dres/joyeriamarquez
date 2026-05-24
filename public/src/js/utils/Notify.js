@@ -1,4 +1,5 @@
-const notifyElement = document.querySelector('.notify')
+import { notifyElement } from '../pages/dom.js'
+
 let timeOutId = undefined
 
 const Notify = {
