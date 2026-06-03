@@ -1,24 +1,24 @@
 import express from 'express'
-import Format from './Format.mjs'
-import sql from './db.mjs'
+import sql from './utils/db.mjs'
+import Format from './utils/Format.mjs'
+import { getPopular } from './utils/initLoad.mjs'
 
 const app = express()
 const port = 5500
 
-app.use(express.static('public'))
+app.use(express.static('public', { etag: true }))
 app.use(express.text())
 app.use(express.json())
 
 app.set('view engine', 'ejs')
 app.set('views', './server/views')
 
-// app.get('/', (req, res) => {
-//   const result = Products.initLoad()
-//   res.render('index', { result })
-// })
+let cache = null
 
-app.get('/', (req, res) => {
-  res.sendFile(process.cwd() + '/public/index.html')
+app.get('/', async (req, res) => {
+  if (!cache) cache = await getPopular()
+  const INIT = cache
+  res.render('index', { INIT })
 })
 
 app.get('/product/:id/:slug', async (req, res) => {
@@ -30,64 +30,44 @@ app.get('/product/:id/:slug', async (req, res) => {
   res.render('producto', { PRODUCTO })
 })
 
-app.get('/:slug', (req, res) => {
-  const slug = req.params.slug
+app.post('/api/products/:type', async (req, res) => {
+  let productos
 
-  switch (slug) {
-    case 'product': {
-      res.sendFile(process.cwd() + '/public/index.html')
-    }
-    case 'order': {
-      //TODO: arreglar el que pasen el mismo producto de nuevo por la URL (Se muestra separado y no contado en un solo item) order?t=3,1,3 -> order?t=3:2,1
-      // const { t } = req.query
-      // const arrIds = t ? t.split(',') : []
-      // const arrCantities = arrIds.map(parDeDatos => parDeDatos.split(':')[1])
-      // const orderProducts = arrIds.map((id, i) => ({
-      //   id: id.split(':')[0],
-      //   cant: arrCantities[i] || 1
-      // }))
-      // const info = filtrarCompartidos(orderProducts)
-      // res.render('productsShared', { info })
-    }
-      break
-    case 'makeup':
-      const result = Products.initLoad('makeup')
-      res.render('makeup', { result })
-      break
-    case 'accessories':
-      res.render('accessories')
-    case 'bag':
-      res.sendFile(process.cwd() + '/public/html/bag.html')
-      break
+  const offset = req.body.offset
+
+  switch (req.params.type) {
+    case 'recent':
+      productos = await sql`SELECT * FROM productos LIMIT 20 OFFSET ${offset}`
+    break
+
+    case 'popular':
+      productos = await sql`SELECT * FROM productos ORDER BY stock LIMIT 10 OFFSET ${offset}`
+    break
     default:
-      res.redirect('/')
-    // return res.status(404).sendFile(process.cwd() + '/public/html/notFound.html')
+      return res.sendStatus(404)
   }
+
+  res.send(productParser(productos))
 })
 
-app.post('/productos', async (req, res) => {
-  res.send(await getProductos(req.body))
-})
-
-app.post('/bag-items', (req, res) => {
-  const ids = req.body.ids
-  const filters = Products.get().filter(p => ids.includes(p.id))
-  res.json(filters)
+app.post('/update-stock', async (req, res) => {
+  const { id, stock } = req.body
+  const data = await sql`UPDATE productos SET stock = ${stock} WHERE id = ${id}`
+  data.length ? res.sendStatus(404) : res.sendStatus(204) 
 })
 
 app.listen(port, () => {
   console.log("Server listen on port", port)
 })
 
-function parserURL(text) {
-  return text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
+function productParser(array) {
+  for (let i = 0; i < array.length; i++) {
+    const p = array[i]
+    p.main_image_id = createBaseImageURL(p.main_image_id)
+    p.precio = Format.formatNumber(p.precio)
+    p.precio_anterior = Format.formatNumber(p.precio_anterior)
+  }
+  return array
 }
 
 function createBaseImageURL(id) {
@@ -100,18 +80,6 @@ function createBaseImageURL(id) {
   return url.substring(0, url.length - 2)
 }
 
-async function getProductos(offset = 0) {
-  const productos = await sql`SELECT * FROM productos LIMIT 20 OFFSET ${offset}`
-  for (let i = 0; i < productos.length; i++) {
-    const p = productos[i]
-    p.main_image_id = createBaseImageURL(p.main_image_id)
-    p.precio = Format.formatNumber(p.precio)
-    p.precio_anterior = Format.formatNumber(p.precio_anterior)
-  }
-  return productos;
-}
-
-//Formato colombiano | Agrega productos de JSON a la DB
 async function fillDB() {
   for (const a of ARTICULOS) {
     let imageName = a.image.split('_165x')[0].slice(35).trim()

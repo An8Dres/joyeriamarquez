@@ -55,6 +55,17 @@ const Format = {
     let result = 0
     for (let i = 0; i < numbers.length; i++) result += formaties[i]
     return this.formatNumber(result)
+  },
+
+  parseURL(text) {
+    return text
+    .toLowerCase()
+    .normalize("NFD") // separa acentos
+    .replace(/[\u0300-\u036f]/g, "") // elimina acentos
+    .replace(/[^a-z0-9\s-]/g, "") // elimina símbolos
+    .trim()
+    .replace(/\s+/g, "-") // espacios -> -
+    .replace(/-+/g, "-") // evita ---
   }
 }
 

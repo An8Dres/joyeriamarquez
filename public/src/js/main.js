@@ -1,5 +1,3 @@
-import { insertarProductos, cargarProductos } from './pages/home.js'
-
-history.scrollRestoration = 'manual'
-
-insertarProductos(await cargarProductos())
+import './features/popular.js'
+import './features/catalog.js'
+import './features/productModal.js'

@@ -1,4 +1,4 @@
-#product-page {
+#product-modal {
   flex-shrink: 0;
   will-change: translate;
   background-color: var(--bgColor);
@@ -15,30 +15,30 @@
   overscroll-behavior: contain;
 }
 
-#product-page.visible {
+#product-modal.visible {
   translate: 0;
 }
 
-.product-page--block:nth-child(1) {
+.product-modal--block:nth-child(1) {
   background-color: var(--bgColor);
   height: 50%;
 }
 
-.product-page--block:nth-child(2) {
+.product-modal--block:nth-child(2) {
   background-color: var(--bgColor);
   height: 100%;
   margin-top: -1rem;
   padding: 1rem;
   padding-top: 0.5rem;
-  border-top-left-radius: 0.8rem;
-  border-top-right-radius: 0.8rem;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
   display: flex;
   flex-direction: column;
   position: relative;
   z-index: 5;
 }
 
-#product-page header {
+#product-modal header {
   flex-shrink: 0;
   background-color: transparent;
   height: 4rem;
@@ -48,12 +48,13 @@
   justify-content: space-between;
   backdrop-filter: none;
   position: sticky;
+  z-index: 2;
 }
 
-#product-page header button {
+#product-modal header button {
   background-color: var(--bgColor);
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border: none;
   border-radius: 50%;
   display: grid;
@@ -61,13 +62,13 @@
   cursor: pointer;
 }
 
-#product-page header button svg {
-  width: 1.5rem;
-  height: 1.5rem;
+#product-modal header button svg {
+  width: 20px;
+  height: 20px;
   fill: var(--textColor);
 }
 
-#product-page header div {
+#product-modal header div {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -96,15 +97,15 @@
 }
 
 #btn-fav:active svg {
-  scale: 1.1;
+  scale: 1.05;
 }
 
 #btn-share:active svg {
   fill: green;
-  scale: 1.1;
+  scale: 1.05;
 }
 
-.product-page-images {
+.product-modal-images {
   width: 100%;
   height: 100%;
   margin-top: -4rem;
@@ -112,7 +113,7 @@
   position: relative;
 }
 
-.product-page-images img {
+.product-modal-images img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -120,15 +121,15 @@
   text-align: center;
 }
 
-.product-page-images img.visible {
+.product-modal-images img.visible {
   opacity: 1;
   transition: opacity 500ms ease-out;
 }
 
-.product-page-images .spin {
+.product-modal-images .spin {
   width: 3rem;
   height: 3rem;
-  border: 0.3rem solid #b5cebb;
+  border: 0.3rem solid var(--creamColor);
   border-top-color: transparent;
   border-radius: 50%;
   display: block;
@@ -140,7 +141,7 @@
   transition: opacity 200ms ease, visiblity 250ms ease;
 }
 
-.product-page-images .spin.hidden {
+.product-modal-images .spin.hidden {
   animation: none;
   visibility: hidden;
   opacity: 0;
@@ -152,40 +153,40 @@
  }
 }
 
-.product-page-info {
+.product-modal-info {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
 }
 
-.product-page-info h2 {
-  color: var(--titleColor);
-  font-size: 1rem;
+.product-modal-info h2 {
+  color: var(--secondColor);
+  font-size: 1.1rem;
 }
 
-.product-page-info hr {
+.product-modal-info hr {
   margin:  0;
 }
 
-.product-page-info--stock {
+.product-modal-info--stock {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.product-page-type {
+.product-modal-type {
   font-size: 0.8rem;
   display: flex;
   align-items: center;
 }
 
-.product-page-type svg {
+.product-modal-type svg {
   fill: var(--textColor);
   width: 24px;
   height: 24px;
 }
 
-.product-page-stock {
+.product-modal-stock {
   font-weight: bold;
   font-size: 0.8rem;
   background-color: #d5ffaa;
@@ -197,7 +198,7 @@
   align-items: center;
 }
 
-.product-page-prices {
+.product-modal-prices {
   font-weight: bold;
   font-size: 0.9rem;
   margin-bottom: 0.5rem;
@@ -209,37 +210,37 @@
   color: var(--textColor);
 }
 
-.product-page-description {
+.product-modal-description {
   font-size: 0.8rem;
   color: var(--textColor);
   text-align: center;
 }
 
-.product-page-sizes {
+.product-modal-sizes {
   margin: 0.5rem 0;
   display: flex;
   justify-content: center;
 }
 
-.product-page-sizes input {
+.product-modal-sizes input {
   accent-color: var(--mainColor);
   cursor: pointer;
 }
 
-.product-page-sizes label {
+.product-modal-sizes label {
   padding: 0.6rem;
   display: flex;
   gap: 0.4rem;
   cursor: pointer;
 }
 
-.product-page-picker {
+.product-modal-picker {
   margin-bottom: 1rem;
   padding: 0 2.4rem;
   display: flex;
 }
 
-.product-page-picker input {
+.product-modal-picker input {
   font-size: 1.2rem;
   font-weight: bold;
   width: 2rem;
@@ -249,11 +250,11 @@
   text-align: center;
 }
 
-.product-page-picker input::-webkit-inner-spin-button {
+.product-modal-picker input::-webkit-inner-spin-button {
   display: none;
 }
 
-.product-page-picker button {
+.product-modal-picker button {
   font-family: Poppins;
   font-size: 1.2rem;
   font-weight: bold;
@@ -266,11 +267,11 @@
   cursor: pointer;
 }
 
-.product-page-picker button:hover {
+.product-modal-picker button:hover {
   background-color: var(--mainColor);
 }
 
-.product-page-actions {
+.product-modal-actions {
   width: 100%;
   margin-top: auto;
   display: flex;
@@ -282,10 +283,11 @@
   z-index: 5;
 }
 
-.product-page-actions button {
+.product-modal-actions button {
   font-weight: bold;
-  background: var(--titleColor);
+  background: var(--blackColor);
   color: var(--bgColor);
+  fill: #fff;
   width: 100%;
   padding: 0.5rem 1rem;
   border: none;
@@ -298,24 +300,27 @@
   transition: translate 150ms ease;
 }
 
-.product-page-actions button svg {
-  fill: #fff;
+.product-modal-actions button svg {
+  fill: inherit;
   width: 24px;
   height: 24px;
-  border-radius: 50%;
   transition: rotate 150ms ease;
 }
 
-.product-page-actions button:hover {
+.product-modal-actions button:hover {
   translate: 0 -5%;
 }
 
-.product-page-actions button:hover svg {
+.product-modal-actions button:hover svg {
   rotate: -10deg
 }
 
+#btn-buy {
+  background: linear-gradient(to right,  #02570c, #066c66);
+}
+
 @media (width > 700px) {
-  #product-page {
+  #product-modal {
     background: #0008;
     padding: 5vh max(10vw, 1rem);
     flex-direction: row;
@@ -326,47 +331,47 @@
     transition: opacity 200ms ease, visibility 300ms ease;
   }
 
-  #product-page.visible {
+  #product-modal.visible {
     opacity: 1;
     visibility: visible;
     transition: opacity 200ms ease;
   }
 
-  .product-page--block:nth-child(1) {
+  .product-modal--block:nth-child(1) {
     width: 100%;
     height: 100%;
-    border-top-left-radius: 1rem;
-    border-bottom-left-radius: 1rem;
+    border-top-left-radius: 1.5rem;
+    border-bottom-left-radius: 1.5rem;
     overflow: hidden;
   }
 
-  .product-page--block:nth-child(2) {
+  .product-modal--block:nth-child(2) {
     margin: 0;
     width: 100%;
     padding: 2rem;
     padding-top: 1.4rem;
     border-top-left-radius: 0;
-    border-top-right-radius: 1rem;
-    border-bottom-right-radius: 1rem;
+    border-top-right-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
   }
 
-  .product-page-info {
+  .product-modal-info {
     gap: 1.2rem;
   }
 
-  .product-page-description {
+  .product-modal-description {
     font-size: 0.9rem;
   }
 
-  .product-page-prices {
+  .product-modal-prices {
     font-size: 1rem;
   }
 
-  .product-page-actions {
+  .product-modal-actions {
     gap: 1.5rem;
   }
 
-  .product-page-actions button {
+  .product-modal-actions button {
     font-size: 1rem;
     padding: 0.8rem;
     border-radius: 1.4rem;

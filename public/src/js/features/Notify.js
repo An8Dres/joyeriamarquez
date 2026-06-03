@@ -1,4 +1,4 @@
-import { notifyElement } from '../pages/dom.js'
+import { notifyElement } from '../ui/dom.js'
 
 let timeOutId = undefined
 
