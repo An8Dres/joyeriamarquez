@@ -1,16 +1,18 @@
 {
   "name": "joyeriamarquez",
   "version": "1.0.0",
+  "type": "module",
   "description": "Servidor web de Marquez Jewelry Store",
-  "main": "server/index.mjs",
+  "main": "server/index.js",
   "scripts": {
-    "start": "node server/index.mjs",
-    "dev": "node --watch server/index.mjs"
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js"
   },
   "keywords": [],
   "author": "Andres Petro",
   "license": "ISC",
   "dependencies": {
+    "compression": "1.8.1",
     "dotenv": "17.4.2",
     "ejs": "5.0.2",
     "express": "5.2.1",

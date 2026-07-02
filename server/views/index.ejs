@@ -9,7 +9,7 @@
   <meta property="og:title" content="JOYERIA MARQUEZ">
   <meta property="og:description"
     content="Descubre joyería fina hecha a mano. Anillos de compromiso, collares y pulseras en oro y plata. Diseños únicos para momentos inolvidables. Compra online.">
-  <meta property="og:image" content="https://an8dres.github.io/joyeriamarquez/src/iconos/preview.png">
+  <meta property="og:image" content="https://an8dres.github.io/joyeriamarquez/iconos/preview.png">
   <meta property="og:url" content="https://an8dres.github.io/joyeriamarquez">
   <meta property="og:type" content="website">
   <!-- Twitter Meta Tags -->
@@ -18,15 +18,23 @@
   <meta property="twitter:url" content="https://an8dres.github.io/joyeriamarquez/">
   <meta name="twitter:title" content="JOYERIA MARQUEZ">
   <meta name="twitter:description" content="Descubre joyería fina hecha a mano. Anillos de compromiso, collares y pulseras en oro y plata. Diseños únicos para momentos inolvidables. Compra online.">
-  <meta name="twitter:image" content="https://an8dres.github.io/joyeriamarquez/src/iconos/preview.png">
+  <meta name="twitter:image" content="https://an8dres.github.io/joyeriamarquez/iconos/preview.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/catalog.css">
 
-  <link rel="preload" href="/src/iconos/banner.avif" as="image" fetchpriority="high">
-  <link rel="preload" href="/src/fonts/Poppins-Regular.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/src/fonts/Cinzel-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/src/css/style-minify.css">
-  <link rel="stylesheet" href="/src/css/producto-minify.css">
-  <link rel="icon" href="/src/favicon.ico">
-  <script type="module" src="/src/js/main.js" defer></script>
+  <link rel="preload" href="/iconos/banner.avif" as="image" fetchpriority="high">
+  <link rel="preload" href="/fonts/Poppins-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/Cinzel-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="modulepreload" href="/js/main.js"></link>
+  <link rel="modulepreload" href="/js/ui/dom.js"></link>
+  <link rel="modulepreload" href="/js/services/api.js"></link>
+  <link rel="modulepreload" href="/js/features/catalog.js"></link>
+  <link rel="modulepreload" href="/js/features/popular.js"></link>
+  
+  <link rel="icon" href="/favicon.ico">
+
+  <script type="module" src="/js/main.js"></script>
   <title>Joyería Márquez</title>
 </head>
 
@@ -34,58 +42,47 @@
   <main>
     <aside class="aside">
       <div class="logo">
-        <img src="/src/iconos/icon.avif" alt="Icon page">
+        <img src="/iconos/icon.avif" alt="Icon page">
         <h2>Joyería Márquez</h2>
       </div>
       <nav>
-        <a href="#" id="home" class="selected">
+        <a href="/" class="selected">
           <svg area-hidden="true" class="icon">
             <use href="#icon-home"></use>
           </svg>
-          <svg area-hidden="true" class="icon filled">
-            <use href="#icon-home-filled"></use>
-          </svg>
           Inicio
         </a>
-        <a href="#" id="search">
+        <a href="/search" disabled>
           <svg area-hidden="true" class="icon">
             <use href="#icon-search"></use>
           </svg>
           Buscar
         </a>
-        <a href="#" id="bag">
+        <a href="/orders" disabled>
           <svg area-hidden="true" class="icon">
             <use href="#icon-bag"></use>
           </svg>
           Pedidos
         </a>
-        <a href="#" id="fav">
+        <a href="/favorites">
           <svg area-hidden="true" class="icon">
             <use href="#icon-favorite"></use>
           </svg>
-          <svg area-hidden="true" class="icon filled">
-            <use href="#icon-favorite-filled"></use>
-          </svg>
           Favoritos
         </a>
-        <a href="#" id="off">
+        <a href="/offers" disabled>
           <svg area-hidden="true" class="icon">
             <use href="#icon-off"></use>
           </svg>
-          <svg area-hidden="true" class="icon filled">
-            <use href="#icon-off-filled"></use>
-          </svg>
           Ofertas
         </a>
-        <a href="#" id="profile">
+        <a href="/profile" disabled>
           <svg area-hidden="true" class="icon">
             <use href="#icon-profile"></use>
           </svg>
-          <svg area-hidden="true" class="icon filled">
-            <use href="#icon-profile-filled"></use>
-          </svg>
           Perfil
         </a>
+        <span id="nav-selector"></span>
       </nav>
       <a href="https://wa.me/573243571105?text=Hola%20Joyer%C3%ADa%20M%C3%A1rquez" id="wsp" target="_blank">
           <svg area-hidden="true" class="icon">
@@ -94,8 +91,8 @@
           Ir a Whatsapp
       </a>
     </aside>
-    <section class="main-section">
-      <header>
+    <section id="main-section">
+      <header id="main-header">
         <div class="hdr-title">
           <h3>Hola, Andres!</h3>
           <p>¿Que deseas ver hoy?</p>
@@ -105,25 +102,23 @@
           <svg><use href="#icon-search"></use></svg>
         </div>
         <div class="hdr-buttons">
-          <button id="btn-notify" aria-label="Notificaciones">
+          <a href="/notifications" id="btn-notify" aria-label="Notificaciones">
             <svg aria-hidden="true">
               <use href="#icon-notify"></use>
             </svg>
-          </button>
-          <button id="btn-cart" aria-label="Carrito de compras">
+          </a>
+          <a href="/cart" id="btn-cart" aria-label="Carrito de compras">
             <svg aria-hidden="true">
               <use href="#icon-cart"></use>
             </svg>
-          </button>
-          <button id="btn-profile" aria-label="Perfil">A</button>
+            <span class="counter">0</span>
+          </a>
+          <a href="/profile" id="btn-profile" aria-label="Perfil">A</a>
         </div>
       </header>
-      <section class="landing">
-        <!-- <img src="/src/icon.png" alt="Logotipo"> -->
-      </section>
-      <section class="catalog__container">
+      <section id="catalog__container">
         <div class="add-panel">
-          <img src="/src/iconos/banner.avif" alt="Banner add product">
+          <img src="/iconos/banner.avif" alt="Banner add product">
           <div>
             <h2>EDICIÓN LIMITADA: LA COLECCIÓN DE ESMERALDAS REALEZA</h2>
             <p>Joyas artesanales con el más fino oro de 18k y gemas certificadas. Diseñadas para deslumbrar.</p>
@@ -131,44 +126,55 @@
           </div>
         </div>
         <div id="popular-card__container">
-          <button class="scroll-button left">➤</button>
+          <header>
+            <h2>Populares</h2>
+            <button>Ver todos</button>
+          </header>
           <div>
-            <%- INIT %>
+            <%- popularCards %>
           </div>
-          <button class="scroll-button right visible">➤</button>
         </div>
         <div class="categories-panel">
           <h2>Categorías</h2>
           <div>
             <span>
-              <img src="/src/iconos/pulsera.avif" alt="Pulsera">
+              <img src="/iconos/pulsera.avif" alt="Pulsera">
               Pusleras
             </span>
             <span>
-              <img src="/src/iconos/anillo.avif" alt="Pulsera">
+              <img src="/iconos/anillo.avif" alt="Pulsera">
               Anillos
             </span>
             <span>
-              <img src="/src/iconos/aretes.avif" alt="Pulsera">
+              <img src="/iconos/aretes.avif" alt="Pulsera">
               Aretes
             </span>
             <span>
-              <img src="/src/iconos/collares.avif" alt="Pulsera">
+              <img src="/iconos/collares.avif" alt="Pulsera">
               Collares
             </span>
             <span>
-              <img src="/src/iconos/dijes.avif" alt="Pulsera">
+              <img src="/iconos/dijes.avif" alt="Pulsera">
               Dijes
             </span>
           </div>
         </div>
         <div id="main-card__container">
           <h2>Todos</h2>
-          <div></div>
+          <div>
+            <%- recentCards %>
+          </div>
         </div>
       </section>
+      <!-- <div class="bag-buttons">
+          <p class="bag-buttons__total">$<span>43.400</span> COP</p>
+          <div class="flex">
+            <button class="bag-buttons__share"><svg><use href="#icon-share"></use></svg></button>
+            <button class="bag-buttons__order">COMPRAR</button>
+          </div>
+      </div> -->
     </section>
-    <section id="product-modal">
+    <section id="product-modal" hidden>
       <section class="product-modal--block">
         <header>
           <button id="btn-back" aria-label="go back">
@@ -194,7 +200,7 @@
         </header>
         <div class="product-modal-images">
           <span class="spin"></span>
-          <img sizes="max(500px, 60vw)" alt="product image">
+          <img decoding="async" sizes="max(500px, 60vw)" alt="product image">
         </div>
       </section>
       <section class="product-modal--block">
@@ -223,7 +229,7 @@
         </div>
         <div class="product-modal-picker">
           <button id="btn-menos">-</button>
-          <input id="input-cantidad" type="number" value="1">
+          <input id="input-cantidad" type="number" value="1" min="1" max="99">
           <button id="btn-mas">+</button>
         </div>
         <aside class="product-modal-actions">

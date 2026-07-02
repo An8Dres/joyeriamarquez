@@ -2,7 +2,7 @@ import { notifyElement } from '../ui/dom.js'
 
 let timeOutId = undefined
 
-const Notify = {
+export const Notify = {
   __proto__: null,
 
   async show({title = 'Notify', text = 'This is a notify', type = 0, handler = () => {}}) {
@@ -21,5 +21,3 @@ const Notify = {
 }
 
 notifyElement.querySelector('.notify-btn').onclick = ()=> notifyElement.classList.remove('open')
-
-export default Notify

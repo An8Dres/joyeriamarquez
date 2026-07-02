@@ -1,6 +1,6 @@
 #product-modal {
   flex-shrink: 0;
-  will-change: translate;
+  will-change: translate, opacity;
   background-color: var(--bgColor);
   width: 100vw;
   height: 100vh;
@@ -9,9 +9,9 @@
   position: fixed;
   top: 0;
   translate: 100%;
+  visibility: hidden;
   z-index: 4;
   transition: translate .2s ease;
-  overflow-y: auto;
   overscroll-behavior: contain;
 }
 
@@ -22,6 +22,7 @@
 .product-modal--block:nth-child(1) {
   background-color: var(--bgColor);
   height: 50%;
+  box-shadow: inset 0 0 3rem #0003;
 }
 
 .product-modal--block:nth-child(2) {
@@ -63,9 +64,10 @@
 }
 
 #product-modal header button svg {
+  fill: var(--textColor);
   width: 20px;
   height: 20px;
-  fill: var(--textColor);
+  position: absolute;
 }
 
 #product-modal header div {
@@ -80,19 +82,19 @@
 }
 
 #btn-fav {
-  padding-top: 0.18rem;
+  padding-top: 0.1rem;
 }
 
 #btn-fav svg:nth-child(2) {
-  display: none;
+  visibility: hidden;
 }
 
 #btn-fav.active svg:nth-child(1) {
-  display: none
+  visibility: hidden;
 }
 
 #btn-fav.active svg:nth-child(2) {
-  display: block;
+  visibility: visible;
   fill: var(--favColor);
 }
 
@@ -116,21 +118,25 @@
 .product-modal-images img {
   width: 100%;
   height: 100%;
+  display: block;
   object-fit: cover;
-  opacity: 0;
   text-align: center;
+  opacity: 0;
+  will-change: opacity, scale;
+  scale: 1.1;
 }
 
 .product-modal-images img.visible {
   opacity: 1;
-  transition: opacity 500ms ease-out;
+  scale: 1;
+  transition: opacity 600ms cubic-bezier(0.25, 1, 0.5, 1), scale 550ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .product-modal-images .spin {
   width: 3rem;
   height: 3rem;
-  border: 0.3rem solid var(--creamColor);
-  border-top-color: transparent;
+  border: 0.3rem solid transparent;
+  border-top-color: var(--mainColor);
   border-radius: 50%;
   display: block;
   position: absolute;
@@ -321,20 +327,19 @@
 
 @media (width > 700px) {
   #product-modal {
-    background: #0008;
+    background-color: #0009;
     padding: 5vh max(10vw, 1rem);
     flex-direction: row;
     translate: 0;
-    backdrop-filter: blur(3px);
     opacity: 0;
     visibility: hidden;
-    transition: opacity 200ms ease, visibility 300ms ease;
+    /* transition: opacity 200ms ease, visibility 300ms ease; */
   }
 
   #product-modal.visible {
     opacity: 1;
     visibility: visible;
-    transition: opacity 200ms ease;
+    transition: opacity 250ms ease;
   }
 
   .product-modal--block:nth-child(1) {
