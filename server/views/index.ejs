@@ -30,7 +30,6 @@
   <link rel="modulepreload" href="/js/ui/dom.js"></link>
   <link rel="modulepreload" href="/js/services/api.js"></link>
   <link rel="modulepreload" href="/js/features/catalog.js"></link>
-  <link rel="modulepreload" href="/js/features/popular.js"></link>
   
   <link rel="icon" href="/favicon.ico">
 
@@ -50,51 +49,51 @@
           <svg area-hidden="true" class="icon">
             <use href="#icon-home"></use>
           </svg>
-          Inicio
+          <span>Inicio</span>
         </a>
-        <a href="/search" disabled>
+        <a href="/search">
           <svg area-hidden="true" class="icon">
             <use href="#icon-search"></use>
           </svg>
-          Buscar
+          <span>Buscar</span>
         </a>
-        <a href="/orders" disabled>
+        <!-- <a href="/orders" disabled>
           <svg area-hidden="true" class="icon">
             <use href="#icon-bag"></use>
           </svg>
-          Pedidos
-        </a>
+          <span>Pedidos</span>
+        </a> -->
         <a href="/favorites">
           <svg area-hidden="true" class="icon">
             <use href="#icon-favorite"></use>
           </svg>
-          Favoritos
+          <span>Favoritos</span>
         </a>
-        <a href="/offers" disabled>
+        <a href="/offers" id="offers">
           <svg area-hidden="true" class="icon">
             <use href="#icon-off"></use>
           </svg>
-          Ofertas
+          <span>Ofertas</span>
         </a>
-        <a href="/profile" disabled>
+        <a href="/profile">
           <svg area-hidden="true" class="icon">
             <use href="#icon-profile"></use>
           </svg>
-          Perfil
+          <span>Perfil</span>
         </a>
         <span id="nav-selector"></span>
       </nav>
-      <a href="https://wa.me/573243571105?text=Hola%20Joyer%C3%ADa%20M%C3%A1rquez" id="wsp" target="_blank">
+      <!-- <a href="https://wa.me/573243571105?text=Hola%20Joyer%C3%ADa%20M%C3%A1rquez" id="wsp" target="_blank">
           <svg area-hidden="true" class="icon">
             <use href="#icon-whatsapp"></use>
           </svg>
           Ir a Whatsapp
-      </a>
+      </a> -->
     </aside>
     <section id="main-section">
       <header id="main-header">
         <div class="hdr-title">
-          <h3>Hola, Andres!</h3>
+          <h3>¡Bievenido!</h3>
           <p>¿Que deseas ver hoy?</p>
         </div>
         <div class="hdr-search">
@@ -134,8 +133,8 @@
             <%- popularCards %>
           </div>
         </div>
-        <div class="categories-panel">
-          <h2>Categorías</h2>
+        <div class="categories-panel" style="display: none;">
+          <header><h2>Categorías</h2></header>
           <div>
             <span>
               <img src="/iconos/pulsera.avif" alt="Pulsera">
@@ -160,7 +159,7 @@
           </div>
         </div>
         <div id="main-card__container">
-          <h2>Todos</h2>
+          <header><h2>Todos</h2></header>
           <div>
             <%- recentCards %>
           </div>

@@ -1,1 +1,3 @@
-console.log('hola mundo desde profile!')
+export function init() {
+  console.log('modulo cargado: PROFILE')
+}

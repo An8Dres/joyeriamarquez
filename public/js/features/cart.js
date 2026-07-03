@@ -29,6 +29,8 @@ export function template(data) {
 }
 
 export function init() {
+  console.log('modulo cargado: CART')
+
   let container = document.getElementById('cart__container')
 
   if (!container) {

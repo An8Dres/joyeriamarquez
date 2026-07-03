@@ -29,15 +29,6 @@ app.get('/', async (req, res) => {
   res.render('index', cache)
 })
 
-// app.get('/product/:id/:slug', async (req, res) => {
-//   const PRODUCTO = (await sql`SELECT * FROM productos WHERE id = ${req.params.id}`)[0]
-//   PRODUCTO.ogImage = `https://napoleonejoyas.co/cdn/shop/files/${PRODUCTO.main_image_id}_x533.jpg` //CDN
-//   PRODUCTO.main_image_id = createBaseImageURL(PRODUCTO.main_image_id)
-//   PRODUCTO.precio = Format.formatNumber(PRODUCTO.precio)
-//   PRODUCTO.precio_anterior = Format.formatNumber(PRODUCTO.precio_anterior)
-//   res.render('producto', { PRODUCTO })
-// })
-
 app.listen(port, () => {
   console.log("Servidor escuchando en puerto", port)
 })

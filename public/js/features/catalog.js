@@ -57,6 +57,8 @@ async function cargarNuevos() {
   const productos = await api.productos.getNuevos(recentOffset)
   const len = productos.length
 
+  console.log(recentOffset, productos)
+
   recentOffset += len
 
   if (len === 0) return
@@ -81,7 +83,6 @@ export async function init() {
   UI = await import('../ui/dom.js')
 
   Modal.init()
-  // UI.cartCounter.textContent = localStorage.getItem('cart') || 0
 
   UI.mainSection.onscroll = ()=> {
     if (!isLoading && UI.mainSection.scrollTop > UI.mainSection.scrollHeight * 0.6){
@@ -99,7 +100,8 @@ export async function init() {
       return
     }
 
+    // CLICK ON CARD
     i = e.target.closest('.product')
-    if (i) Modal.show(i) // Click on card
+    if (i) Modal.show(i)
   }
 }

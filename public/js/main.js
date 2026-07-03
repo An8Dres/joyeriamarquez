@@ -1,7 +1,6 @@
-import { init } from './features/catalog.js'
-import './features/popular.js'
-import { mainNav } from './ui/dom.js'
+import { mainNav, cartCounter } from './ui/dom.js'
 
+//MAIN HEADER
 let lastAnchor = mainNav.querySelector('.selected')
 
 mainNav.onclick = e => {
@@ -14,7 +13,14 @@ mainNav.onclick = e => {
 }
 
 document.addEventListener('DOMContentLoaded', async ()=> {
-  init()
-  const Router = (await import ('./services/Router.js')).default
+  cartCounter.textContent = localStorage.getItem('cart') || 0
+
+  const Router = await import ('./services/Router.js')
+  
   Router.init()
+
+  if (location.pathname.includes('/product/')) {
+    const Modal = await import('./features/modal.js')
+    Modal.init()
+  }
 })

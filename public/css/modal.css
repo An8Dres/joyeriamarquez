@@ -3,16 +3,17 @@
   will-change: translate, opacity;
   background-color: var(--bgColor);
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   position: fixed;
   top: 0;
   translate: 100%;
-  visibility: hidden;
+  visibility: visible;
   z-index: 4;
   transition: translate .2s ease;
   overscroll-behavior: contain;
+  overflow-y: auto;
 }
 
 #product-modal.visible {
@@ -21,7 +22,7 @@
 
 .product-modal--block:nth-child(1) {
   background-color: var(--bgColor);
-  height: 50%;
+  min-height: 50%;
   box-shadow: inset 0 0 3rem #0003;
 }
 
@@ -29,8 +30,7 @@
   background-color: var(--bgColor);
   height: 100%;
   margin-top: -1rem;
-  padding: 1rem;
-  padding-top: 0.5rem;
+  padding: 0.5rem 1rem 0 1rem;
   border-top-left-radius: 1rem;
   border-top-right-radius: 1rem;
   display: flex;
@@ -49,6 +49,7 @@
   justify-content: space-between;
   backdrop-filter: none;
   position: sticky;
+  top: 0;
   z-index: 2;
 }
 
@@ -280,6 +281,7 @@
 .product-modal-actions {
   width: 100%;
   margin-top: auto;
+  padding-bottom: 1rem;
   display: flex;
   gap: 1rem;
   justify-content: center;
@@ -373,6 +375,7 @@
   }
 
   .product-modal-actions {
+    padding: 0;
     gap: 1.5rem;
   }
 

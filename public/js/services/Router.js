@@ -1,4 +1,4 @@
-const routes = ['/cart', '/profile'] // All endpoints
+const routes = ['/', '/cart', '/profile'] // All endpoints
 const cache = new Array(3)
 
 history.scrollRestoration = 'manual'
@@ -18,19 +18,21 @@ function changeState(e) {
 }
 
 async function loadViews() {
-  const URL = location.pathname
-  if (!routes.includes(URL)) return
-  
-  const mod = await import(`../features${URL}.js`)
+  let url = location.pathname
+
+  //DINAMIC AND STATIC PATHS
+  // if (url.includes('/product')) url = '/product'
+  if (!routes.includes(url)) return
+
+  //MODULE OF MAIN PATH
+  if (url === '/') url = '/catalog'
+
+  const mod = await import(`../features${url}.js`)
+  mod.init()
 }
 
-const Router = {
-  __proto__: null,
-
-  init() {
-    document.addEventListener('click', changeState)
-    window.addEventListener('popstate', loadViews)
-  },
+export function init() {
+  loadViews()
+  document.addEventListener('click', changeState)
+  window.addEventListener('popstate', loadViews)
 }
-
-export default Router
