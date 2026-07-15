@@ -8,15 +8,18 @@ apiRouter.post('/products/:type', async (req, res) => {
   try {
     let productos
 
-    const offset = req.body.offset
+    const { body } = req
 
     switch (req.params.type) {
+      case 'id':
+        productos = await sql`SELECT * FROM productos WHERE id=${body.id}`
+      break
       case 'recent':
-        productos = await sql`SELECT * FROM productos LIMIT 20 OFFSET ${offset}`
+        productos = await sql`SELECT * FROM productos LIMIT 20 OFFSET ${body.offset}`
       break
 
       case 'popular':
-        productos = await sql`SELECT * FROM productos ORDER BY stock LIMIT 10 OFFSET ${offset}`
+        productos = await sql`SELECT * FROM productos ORDER BY stock LIMIT 10 OFFSET ${body.offset}`
       break
       default:
         return res.sendStatus(404)

@@ -4,29 +4,29 @@ import Format from '../utils/Format.js'
 
 const navRouter = new Router()
 
-navRouter.get('/:slug', (req, res) => res.redirect('/'))
-
-navRouter.get('/product/:id/:slug', async (req, res) => {
+async function loadProduct(req, res) {
   try {
-    const PRODUCT = (await sql`SELECT * FROM productos WHERE id = ${req.params.id}`)[0]
+    const result = await sql`SELECT * FROM productos WHERE id = ${req.params.id}`
+    const idImage = result[0].main_image_id
+    const product = Format.productParser(result)[0]
+
+    if (req.originalUrl !== product.href) return res.redirect(product.href)
     
     const data = {
       __proto__: null,
-      ogImage: `https://napoleonejoyas.co/cdn/shop/files/${PRODUCT.main_image_id}_x533.jpg`, //CDN
-      product: null
+      ogImage: `https://napoleonejoyas.co/cdn/shop/files/${idImage}_x533.jpg`, //CDN
+      product
     }
 
-    PRODUCT.main_image_id = Format.createBaseImageURL(PRODUCT.main_image_id)
-    PRODUCT.precio = Format.formatNumber(PRODUCT.precio)
-    PRODUCT.precio_anterior = Format.formatNumber(PRODUCT.precio_anterior)
-
-    data.product = PRODUCT
-
-    res.render('product', { data })
+    res.render('product', data)
   } catch (err) {
-    console.error('ERROR:', err.message)
+    console.error(err.message)
     res.sendStatus(500)
   }
-})
+}
+
+navRouter.get('/:slug', (req, res) => res.redirect('/'))
+navRouter.get('/product/:id', loadProduct)
+navRouter.get('/product/:id/:slug', loadProduct)
 
 export default navRouter

@@ -2,6 +2,8 @@ import { notifyElement } from '../ui/dom.js'
 
 let timeOutId = undefined
 
+const classType = ['info', 'warn','error']
+
 export const Notify = {
   __proto__: null,
 
@@ -10,9 +12,15 @@ export const Notify = {
     try {
       handler()
       clearTimeout(timeOutId)
+      //TODO: REPAIR
+      classType.forEach(c => {
+        if (c === classType[type]) return
+        if (notifyElement.classList.contains(c)) notifyElement.classList.remove(c)
+      })
+      notifyElement.classList.add(classType[type])
       notifyElement.querySelector('.notify-title').innerText = title
       notifyElement.querySelector('.notify-text').innerText = text
-      setTimeout(()=> {notifyElement.classList.add('open')}, 20)
+      notifyElement.classList.add('open')
       timeOutId = setTimeout(()=> {notifyElement.classList.remove('open')}, 5000)
     } catch (err) {
       console.error('No se pudo monstrar la notificación: ', err)
@@ -20,4 +28,6 @@ export const Notify = {
   }
 }
 
-notifyElement.querySelector('.notify-btn').onclick = ()=> notifyElement.classList.remove('open')
+export function close() {
+  notifyElement.classList.remove('open')
+}

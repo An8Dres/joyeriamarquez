@@ -21,15 +21,19 @@
   <meta name="twitter:image" content="https://an8dres.github.io/joyeriamarquez/iconos/preview.png">
   
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/catalog.css">
+  <link rel="stylesheet" href="/css/home.css">
 
   <link rel="preload" href="/iconos/banner.avif" as="image" fetchpriority="high">
   <link rel="preload" href="/fonts/Poppins-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/Cinzel-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="modulepreload" href="/js/main.js"></link>
-  <link rel="modulepreload" href="/js/ui/dom.js"></link>
-  <link rel="modulepreload" href="/js/services/api.js"></link>
-  <link rel="modulepreload" href="/js/features/catalog.js"></link>
+  
+  <link rel="modulepreload" href="/js/ui/dom.js">
+  <link rel="modulepreload" href="/js/main.js">
+  <link rel="modulepreload" href="/js/services/api.js">
+  <link rel="modulepreload" href="/js/services/router.js">
+  <link rel="modulepreload" href="/js/features/home.js">
+
+  <link rel="prefetch" href="/js/features/product.js" as="script">
   
   <link rel="icon" href="/favicon.ico">
 
@@ -39,19 +43,20 @@
 
 <body>
   <main>
+    <span class="progress-bar"></span>
     <aside class="aside">
       <div class="logo">
         <img src="/iconos/icon.avif" alt="Icon page">
         <h2>Joyería Márquez</h2>
       </div>
       <nav>
-        <a href="/" class="selected">
+        <a href="/" data-action="navigate" class="selected">
           <svg area-hidden="true" class="icon">
             <use href="#icon-home"></use>
           </svg>
           <span>Inicio</span>
         </a>
-        <a href="/search">
+        <a href="/search" data-action="navigate">
           <svg area-hidden="true" class="icon">
             <use href="#icon-search"></use>
           </svg>
@@ -63,19 +68,19 @@
           </svg>
           <span>Pedidos</span>
         </a> -->
-        <a href="/favorites">
+        <a href="/favorites" data-action="navigate">
           <svg area-hidden="true" class="icon">
             <use href="#icon-favorite"></use>
           </svg>
           <span>Favoritos</span>
         </a>
-        <a href="/offers" id="offers">
+        <a href="/offers" id="offers" data-action="navigate">
           <svg area-hidden="true" class="icon">
             <use href="#icon-off"></use>
           </svg>
           <span>Ofertas</span>
         </a>
-        <a href="/profile">
+        <a href="/profile" data-action="navigate">
           <svg area-hidden="true" class="icon">
             <use href="#icon-profile"></use>
           </svg>
@@ -83,12 +88,6 @@
         </a>
         <span id="nav-selector"></span>
       </nav>
-      <!-- <a href="https://wa.me/573243571105?text=Hola%20Joyer%C3%ADa%20M%C3%A1rquez" id="wsp" target="_blank">
-          <svg area-hidden="true" class="icon">
-            <use href="#icon-whatsapp"></use>
-          </svg>
-          Ir a Whatsapp
-      </a> -->
     </aside>
     <section id="main-section">
       <header id="main-header">
@@ -115,7 +114,7 @@
           <a href="/profile" id="btn-profile" aria-label="Perfil">A</a>
         </div>
       </header>
-      <section id="catalog__container">
+      <section id="catalog" class="page visible">
         <div class="add-panel">
           <img src="/iconos/banner.avif" alt="Banner add product">
           <div>
@@ -165,87 +164,6 @@
           </div>
         </div>
       </section>
-      <!-- <div class="bag-buttons">
-          <p class="bag-buttons__total">$<span>43.400</span> COP</p>
-          <div class="flex">
-            <button class="bag-buttons__share"><svg><use href="#icon-share"></use></svg></button>
-            <button class="bag-buttons__order">COMPRAR</button>
-          </div>
-      </div> -->
-    </section>
-    <section id="product-modal" hidden>
-      <section class="product-modal--block">
-        <header>
-          <button id="btn-back" aria-label="go back">
-            <svg area-hidden="true">
-              <use href="#icon-arrowback"></use>
-            </svg>
-          </button>
-          <div>
-            <button id="btn-fav" aria-label="add to favorite">
-              <svg area-hidden="true">
-                <use href="#icon-favorite"></use>
-              </svg>
-              <svg area-hidden="true">
-                <use href="#icon-favorite-filled"></use>
-              </svg>
-            </button>
-            <button id="btn-share" aria-label="share product">
-              <svg area-hidden="true">
-                <use href="#icon-share"></use>
-              </svg>
-            </button>
-          </div>
-        </header>
-        <div class="product-modal-images">
-          <span class="spin"></span>
-          <img decoding="async" sizes="max(500px, 60vw)" alt="product image">
-        </div>
-      </section>
-      <section class="product-modal--block">
-        <div class="product-modal-info">
-          <h2></h2>
-          <div class="product-modal-info--stock">
-            <div class="product-modal-type">
-              <svg area-hidden="true">
-                <use href="#icon-star-filled"></use>
-              </svg>
-              <span></span>
-            </div>
-            <span class="product-modal-stock"></span>
-          </div>
-          <div class="product-modal-prices">
-            <span class="price"></span>
-            <s class="lastprice"></s>
-          </div>
-          <p class="product-modal-description"></p>
-        </div>
-        <div class="product-modal-sizes">
-          <label tabindex="0"><input type="radio" name="sizes">S</label>
-          <label tabindex="0"><input type="radio" name="sizes">M</label>
-          <label tabindex="0"><input type="radio" name="sizes">L</label>
-          <label tabindex="0"><input type="radio" name="sizes">XL</label>
-        </div>
-        <div class="product-modal-picker">
-          <button id="btn-menos">-</button>
-          <input id="input-cantidad" type="number" value="1" min="1" max="99">
-          <button id="btn-mas">+</button>
-        </div>
-        <aside class="product-modal-actions">
-          <button id="btn-add">
-            Agregar
-            <svg area-hidden="true">
-              <use href="#icon-cart-out"></use>
-            </svg>
-          </button>
-          <button id="btn-buy">
-            Whatsapp
-            <svg area-hidden="true">
-              <use href="#icon-cart-filled"></use>
-            </svg>
-          </button>
-        </aside>
-      </section>
     </section>
   </main>
 
@@ -257,7 +175,7 @@
       <p class="notify-title"></p>
       <span class="notify-text"></span>
     </div>
-    <button class="notify-btn">✕</button>
+    <button class="notify-btn" data-action="closeNotify">✕</button>
   </div>
 
   <svg xmlns="http://www.w3.org/2000/svg" style="display: none">
