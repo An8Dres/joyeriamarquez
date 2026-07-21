@@ -30,8 +30,8 @@ async function fillDB() {
       console.log(productos)
       for (const p of productos) {
         await sql`INSERT INTO productos (titulo, info, main_image_id, precio, precio_anterior, tipo, stock) VALUES (${p.titulo}, ${p.info}, ${p.main_image_id}, ${p.precio}, ${p.precio_anterior}, ${p.tipo}, ${p.stock})`
-      } else console.log('La base está llena')
-    }
+      }
+    } else console.log('La base está llena')
   } catch(e) { console.error(e) }
 }
 
