@@ -12,6 +12,9 @@
   --borderColor: #efeae1;
   --shadowColor: #0002;
   --blackColor: #000;
+  /*SIZES*/
+  --headerHeight: 5rem;
+  --asideWidth: 260px;
 }
 
 @font-face {
@@ -79,6 +82,10 @@ img {
 
 input[type=number] {
   -moz-appearance: textfield;
+
+  ::-webkit-inner-spin-button {
+    display: none;
+  }
 }
 
 main {
@@ -115,7 +122,7 @@ main {
 .aside {
   flex-shrink: 0;
   background-color: var(--bgColor);
-  width: 260px;
+  width: var(--asideWidth);
   height: inherit;
   display: flex;
   flex-direction: column;
@@ -256,7 +263,8 @@ main {
 }
 
 #main-section {
-  flex: auto;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -266,7 +274,7 @@ main {
 #main-header {
   background-color: var(--bgColor); /* #fffbf2b9 */
   width: 100%;
-  min-height: 5rem;
+  min-height: var(--headerHeight);
   padding: 0 1.5rem;
   display: flex;
   align-items: center;
@@ -373,9 +381,32 @@ main {
 .page {
   position: absolute;
   inset: 0;
-  top: 5rem;
+  top: var(--headerHeight);
   overflow-y: auto;
+  overflow-x: hidden;
   scroll-behavior: smooth;
+  opacity: 0;
+  visibility: hidden;
+  
+  &.modal {
+    will-change: translate, opacity;
+    background-color: #0009;
+    padding: 0 max(8vw, 1rem);
+    width: 100vw;
+    height: 100dvh;
+    display: grid;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    transition: opacity 300ms ease, visibility 200ms ease;
+
+    .phantom-box { display: none }
+  }
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 .notify {
@@ -503,7 +534,7 @@ main {
 .phantom-box {
   width: 100vw;
   min-height: 4rem;
-  display: flex;
+  display: none;
   position: absolute;
   bottom: -4rem;
   left: 0;
@@ -578,9 +609,7 @@ main {
   }
   
   .aside {
-    background-color: var(--bgColor);
-    width: 100vw;
-    height: 5rem;
+    height: var(--headerHeight);
     padding: 0;
     position: fixed;
     bottom: 0;
@@ -633,17 +662,42 @@ main {
       fill: var(--textColor);
     }
   }
+
+  .modal {
+    padding: 1rem;
+  }
+
+  .phantom-box {
+    display: flex !important;
+  }
 }
 
 @media screen and (width < 700px) {
+  :root {
+    --headerHeight: 4rem;
+    --asideWidth: 100%;
+  }
+
   .page {
-    top: 4rem;
-    bottom: 4rem;
+    top: var(--headerHeight);
+    bottom: var(--headerHeight);
+
+    &.modal {
+      padding: 0;
+      overscroll-behavior: auto;
+      translate: 100%;
+      transition: opacity 0s 200ms,
+      visibility 0s 200ms,
+      translate 200ms ease;
+    }
+
+    &.modal.visible {
+      translate: 0;
+      transition: translate 200ms ease;
+    }
   }
 
   .aside {
-    height: 4rem;
-
     #nav-selector {
       width: calc((100% / 4) - 1rem);
       height: 3rem;
@@ -673,7 +727,7 @@ main {
   }
 
   #main-header {
-    min-height: 4rem;
+    min-height: var(--headerHeight);
     padding: 0 0.5rem;
 
     svg {

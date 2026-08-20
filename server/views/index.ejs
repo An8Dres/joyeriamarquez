@@ -50,13 +50,13 @@
         <h2>Joyería Márquez</h2>
       </div>
       <nav>
-        <a href="/" data-action="navigate" class="selected">
+        <a href="/" data-action="nav" class="selected">
           <svg area-hidden="true" class="icon">
             <use href="#icon-home"></use>
           </svg>
           <span>Inicio</span>
         </a>
-        <a href="/search" data-action="navigate">
+        <a href="/search" data-action="nav">
           <svg area-hidden="true" class="icon">
             <use href="#icon-search"></use>
           </svg>
@@ -68,19 +68,19 @@
           </svg>
           <span>Pedidos</span>
         </a> -->
-        <a href="/favorites" data-action="navigate">
+        <a href="/favorites" data-action="nav">
           <svg area-hidden="true" class="icon">
             <use href="#icon-favorite"></use>
           </svg>
           <span>Favoritos</span>
         </a>
-        <a href="/offers" id="offers" data-action="navigate">
+        <a href="/offers" id="offers" data-action="nav">
           <svg area-hidden="true" class="icon">
             <use href="#icon-off"></use>
           </svg>
           <span>Ofertas</span>
         </a>
-        <a href="/profile" data-action="navigate">
+        <a href="/profile" data-action="nav">
           <svg area-hidden="true" class="icon">
             <use href="#icon-profile"></use>
           </svg>
@@ -105,7 +105,7 @@
               <use href="#icon-notify"></use>
             </svg>
           </a>
-          <a href="/cart" id="btn-cart" aria-label="Carrito de compras">
+          <a href="/cart" id="btn-cart" data-action="navigate" aria-label="Carrito de compras">
             <svg aria-hidden="true">
               <use href="#icon-cart"></use>
             </svg>
@@ -114,7 +114,7 @@
           <a href="/profile" id="btn-profile" aria-label="Perfil">A</a>
         </div>
       </header>
-      <section id="catalog" class="page visible">
+      <section id="home" class="page visible">
         <div class="add-panel">
           <img src="/iconos/banner.avif" alt="Banner add product">
           <div>

@@ -1,4 +1,4 @@
-export function template(data) {
+export function tplCards(data) {
   let htmlBuffer = ''
 
   for (let i = 0; data.length; i++) {
@@ -28,14 +28,15 @@ export function template(data) {
   return htmlBuffer
 }
 
+export function template() {
+  return `<section id="cart" class="page visible">
+  </section>`
+}
+
 export function init() {
   console.log('modulo cargado: CART')
 
-  let container = document.getElementById('cart__container')
-
-  if (!container) {
-    container = document.createElement('section')
-    container.setAttribute('id', 'cart__container')
-    document.getElementById('main-section').appendChild(container)
-  }
+  let root = document.getElementById('cart')
 }
+
+export function update() {}

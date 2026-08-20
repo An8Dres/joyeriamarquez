@@ -86,7 +86,7 @@ export function guardarEnCarrito(button) {
 }
 
 export function template({view}) {
-  return `<article class="page product ${view === 'modal' ? 'modal' : ''}" data-click="back">
+  return `<article id="product" class="page ${view === 'modal' ? 'modal' : ''}" data-click="back">
     <div class="product-container">
       <section>
         <header>
@@ -165,7 +165,7 @@ export function template({view}) {
 }
 
 export function init() {
-  const modalRoot = document.querySelector('.product')
+  const modalRoot = document.getElementById('product')
 
   productModal = {
     __proto__: null,

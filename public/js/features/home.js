@@ -1,6 +1,6 @@
 let homePage
-let recentOffset = 30
-let popularOffset = 10
+let recentId = 0
+let popularId = 0
 let isLoading = false
 let api, ui
 
@@ -10,7 +10,7 @@ export function tplNuevos(array) {
   for (let i = 0; i < array.length; i++) {
     const prod = array[i]
     htmlBuffer += `
-      <a href="${prod.href}" class="product-card" data-id="${prod.id}" data-action="show">
+      <a href="${prod.href}" class="product-card" data-id="${prod.id}" data-action="modal">
         <div class="pdt-image">
           <button class="pdt-btn toggleable" data-action="like" aria-label="button add to favorites">
             <svg aria-hidden="true"><use href="#icon-favorite"></use></svg>
@@ -36,7 +36,7 @@ export function tplPopulares(array) {
   for (let i = 0; i < array.length; i++) {
     const prod = array[i]
     htmlBuffer += `
-      <a href="${prod.href}" class="product-card" data-id="${prod.id}" data-action="show">
+      <a href="${prod.href}" class="product-card" data-id="${prod.id}" data-action="modal">
         <div class="pdt-image">
           <span class="pdt-target">Más vendido</span>
           <img sizes="300px" alt="producto" decoding="async" loading="lazy" srcset="${prod.main_image_id}">
@@ -54,29 +54,29 @@ export function tplPopulares(array) {
 }
 
 async function cargarNuevos() {
-  const productos = await api.productos.getNuevos(recentOffset)
+  const productos = await api.productos.getNuevos(recentId)
   const len = productos.length
 
-  recentOffset += len
-
   if (len === 0) return
+
+  recentId = productos[len - 1]?.id || recentId
 
   homePage.recentContainer.insertAdjacentHTML('beforeend', tplNuevos(productos))
 }
 
 async function cargarPopulares() {
-  const productos = await api.productos.getPopulares(popularOffset)
+  const productos = await api.productos.getPopulares(popularId)
   const len = productos.length
 
-  popularOffset += len
-
   if (len === 0) return
+
+  popularId = productos[len - 1]?.id || popularId
 
   homePage.popularContainer.insertAdjacentHTML('beforeend', tplPopulares(productos))
 }
 
 export function template() {
-  return `<section id="catalog" class="page visible">
+  return `<section id="home" class="page visible">
     <div class="add-panel">
       <img src="/iconos/banner.avif" alt="Banner add product">
       <div>
@@ -107,7 +107,7 @@ export async function init() {
     import('/js/services/api.js')
   ])
 
-  const root = ui.mainSection.querySelector('#catalog')
+  const root = ui.mainSection.querySelector('#home')
 
   homePage = {
     __proto__: null,
@@ -122,6 +122,11 @@ export async function init() {
       await cargarNuevos()
       setTimeout(()=> {isLoading = false}, 100)
     }
+  }
+
+  if (homePage.popularContainer.lastElementChild !== null) {
+    recentId = homePage.recentContainer.lastElementChild.dataset.id
+    popularId = homePage.popularContainer.lastElementChild.dataset.id
   }
 }
 

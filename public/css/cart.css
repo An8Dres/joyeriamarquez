@@ -1,8 +1,4 @@
-#main-header {
-  display: none;
-}
-
-#cart__container, .shared-items {
+#cart, .shared-items {
   width: 100%;
   height: 100%;
   padding: 1.5rem;
@@ -43,9 +39,7 @@
   border: none;
   background-color: transparent;
 }
-.cart-item__info {
-  margin-top: 1ch;
-}
+
 .cart-item__button--remove {
   fill: #888;
   width: 3rem;
@@ -72,48 +66,28 @@
 .cart-item .qty-buttons {
   display: flex;
 }
-.cart-item .qty-btn {
-  color: transparent;
-  font-size: 1.6rem;
-  border-radius: 1rem;
+
+.cart-item button {
+  font-family: Poppins;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background-color: var(--textSecondColor);
+  color: var(--bgColor);
   width: 2rem;
   height: 2rem;
-  position: relative;
-  display: grid;
-  place-items: center;
-}
-.cart-item .qty-btn::before {
-  content: "";
-  width: 50%;
-  height: 4px;
-  border-radius: 1rem;
-  position: absolute;
-}
-.cart-item .qty-btn--minus::before {
-  background-color: var(--accent-color);
-}
-.cart-item .qty-btn--plus::before {
-  background-color: var(--color2);
-}
-.cart-item .qty-btn--plus::after {
-  content: "";
-  background-color: var(--color3);
-  width: 4px;
-  height: 50%;
-  border-radius: 1rem;
-  position: absolute;
-}
-.cart-item .qty-input {
-  color: var(--text);
-  font-size: 1.2rem;
-  font-weight: 600;
   border: none;
-  width: 3rem;
-  text-align: center;
-  outline: none;
-  appearance: textfield;
-  -moz-appearance: textfield;
+  border-radius: 50%;
+  cursor: pointer;
+
+  &:first-child {
+    opacity: 0.5
+  }
+
+  &:hover {
+    background-color: var(--secondColor);
+  }
 }
+
 .cart-item .qty-total, .cart-item__total {
   font-weight: bold;
   color: green;

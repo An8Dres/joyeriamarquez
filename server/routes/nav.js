@@ -1,6 +1,7 @@
 import { Router } from "express"
 import sql from '../utils/db.js'
 import Format from '../utils/Format.js'
+import {template as tplCart} from '../../public/js/features/cart.js'
 
 const navRouter = new Router()
 
@@ -25,7 +26,13 @@ async function loadProduct(req, res) {
   }
 }
 
-navRouter.get('/:slug', (req, res) => res.redirect('/'))
+navRouter.get('/:slug', async (req, res) => {
+  if (req.params.slug === 'cart') {
+    const template = tplCart()
+    res.render('template', { template })
+  }else res.sendStatus(404)
+})
+
 navRouter.get('/product/:id', loadProduct)
 navRouter.get('/product/:id/:slug', loadProduct)
 

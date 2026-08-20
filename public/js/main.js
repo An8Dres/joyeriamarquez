@@ -5,11 +5,10 @@ let lastAnchor = navSelect
 const acciones = {
   __proto__: null,
   manejarNav,
+  nav:         ['.', 'manejarNav'],
   closeNotify: ['/features/Notify', 'close'],
-  // navigate:    ['/services/router', 'navigate'],
-  navigate:    ['.', 'manejarNav'],
-  page:        ['/services/router', 'navigate'],
-  show:        ['/services/router', 'navigate', { view: 'modal' }],
+  navigate:    ['/services/router', 'navigate'],
+  modal:       ['/services/router', 'navigate', { view: 'modal' }],
   back:        ['/features/product', 'atras'],
   share:       ['/features/product', 'compartir'],
   like:        ['/features/product', 'manejarLike'],
@@ -22,14 +21,14 @@ const acciones = {
 function manejarNav(anchor) {
   delete anchor.dataset.loading
 
+  ejecutar('navigate', anchor)
+
   if (anchor !== lastAnchor) {
     if (lastAnchor) lastAnchor.classList.remove('selected')
   
     anchor.classList.add('selected')
     lastAnchor = anchor
   }
-
-  ejecutar('page', anchor)
 }
 
 function ejecutar(nombreAccion, target) {
@@ -39,6 +38,7 @@ function ejecutar(nombreAccion, target) {
 
   if (config) {
     target.dataset.loading = "true"
+
     if (config[0] === '.') {
       acciones[config[1]](target)
       return

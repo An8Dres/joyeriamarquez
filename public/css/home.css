@@ -1,7 +1,4 @@
-#catalog {
-  opacity: 0;
-  visibility: hidden;
-
+#home {
   h2 {
     font-family: Cinzel;
     font-size: 1rem;
@@ -124,11 +121,6 @@
   .categories-panel span:hover {
     background-color: var(--hoverColor);
   }
-}
-
-#catalog.visible {
-  opacity: 1;
-  visibility: visible;
 }
 
 #popular-card__container {
@@ -346,7 +338,7 @@
 }
 
 @media screen and (width < 650px) {
-  #catalog {
+  #home {
     padding: 0;
 
     .add-panel {

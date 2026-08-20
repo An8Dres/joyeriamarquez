@@ -4,7 +4,7 @@ import { Notify } from '/js/features/Notify.js'
 const cache = new Map()
 const cssCache = new Set()
 
-let lastElement = null
+let lastPage = null
 
 function getEndpoint(url) { 
   const endpoint = URL.parse(url || location.href).pathname
@@ -70,7 +70,7 @@ export async function init() {
   cssCache.add(endpoint)
   cache.set(endpoint, config)
 
-  lastElement = mainPage
+  lastPage = mainPage
 
   window.onpopstate = e => navigate({ href: location.href }, e.state)
 }
@@ -97,6 +97,8 @@ export async function navigate(anchor, options = null) {
 
   const config = cache.get(endpoint)
 
+  console.log(endpoint, options)
+
   if (url !== location.href) history.pushState(options, null, url)
   
   if (config?.element) {
@@ -109,17 +111,17 @@ export async function navigate(anchor, options = null) {
       config.element.classList.add('modal')
     } else {
       config.element.classList.remove('modal')
-      lastElement.classList.remove('visible')
+      lastPage.classList.remove('visible')
     }
     
     config.element.classList.add('visible')
 
-    lastElement = config.element
+    lastPage = config.element
     config.lastVisited = pathcut
     return
   }
 
-  if (options?.view !== 'modal') lastElement.classList.remove('visible')
+  if (options?.view !== 'modal') lastPage?.classList.remove('visible')
 
   mainSection.insertAdjacentHTML('beforeend', Module.template(options))
   await Module.init(options)
@@ -127,7 +129,7 @@ export async function navigate(anchor, options = null) {
 
   let element = mainSection.lastElementChild
   element.classList.add('visible')
-  lastElement = element
+  lastPage = element
 
   cache.set(endpoint, { element, lastVisited: pathcut })
 

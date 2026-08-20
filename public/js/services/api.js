@@ -19,8 +19,8 @@ export const api = {
   productos: {
     __proto__: null,
     get: (id) => request('/products/id', { id }),
-    getNuevos: (offset) => request('/products/recent', { offset }),
-    getPopulares: (offset) => request('/products/popular', { offset })
+    getNuevos: (id) => request('/products/recent', { id }),
+    getPopulares: (id) => request('/products/popular', { id })
   },
 
   carrito: {
