@@ -96,6 +96,7 @@
           <p>¿Que deseas ver hoy?</p>
         </div>
         <div class="hdr-search">
+          <span></span>
           <input type="text" id="input-search" placeholder="Buscar, una pulsera de oro...">
           <svg>
             <use href="#icon-search"></use>
@@ -113,30 +114,13 @@
             </svg>
             <span class="counter">0</span>
           </a>
-          <a href="/profile" id="btn-profile" aria-label="Perfil">A</a>
+          <a href="/profile" id="btn-profile" aria-label="Perfil">
+            <span>A</span>
+          </a>
         </div>
       </header>
       <!-- <%- template %> -->
       <section id="cart" class="page visible">
-        <article class="cart-item" data-id="${pdt.id}">
-          <header>
-            <button class="cart-item__button--remove">✕</button>
-            <img src="https://napoleonejoyas.co/cdn/shop/files/photo_5129941133873491874_y_x360.jpg" alt="Producto">
-            <div class="cart-item__info">
-              <h6 class="cart-item__type">Pulsera</h6>
-              <p class="cart-item__name">Pulsera Beige Estrella De Mar 3mm Bolas Diamantadas 8und Oro Amarillo 18K</p>
-              <p class="cart-item__price">$<span class="price">130.000</span> COP</p>
-            </div>
-          </header>
-          <div class="cart-item__buttons qty-picker">
-            <div class="qty-buttons">
-              <button data-action="decrement">-</button>
-              <input type="number" value="1" min="1" max="99">
-              <button data-action="increment">+</button>
-            </div>
-            <p class="qty-total">$<span>130.000</span> COP</p>
-          </div>
-        </article>
       </section>
     </section>
   </main>
