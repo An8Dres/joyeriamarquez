@@ -1,33 +1,130 @@
-import { cartCounter, mainSection } from '/js/ui/dom.js'
-import { api } from '/js/services/api.js'
+let page
 
-let productModal
-
-const esperar = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-
-function loadFromCard(card) {
-  const info = card.querySelector('.pdt-info').dataset
-
-  return {
-    __proto__: null,
-    main_image_id: card.querySelector('img').srcset,
-    titulo: card.querySelector('.pdt-name').textContent,
-    tipo: info.type, stock: info.stock,
-    precio: card.querySelector('b').textContent,
-    precio_anterior: card.querySelector('s').textContent,
-    info: card.querySelector('.pdt-description').textContent
+const parser = {
+  __proto__: null,
+  getNumero(precio) {
+    const texto = String(precio)
+    const textoSinPuntos = texto.replace(/\./g, "")
+    return Number(textoSinPuntos)
+  },
+  getPrecio(numero) {
+    let texto = numero.toString()
+    return texto.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+  },
+  getSrcset(imagenId) {
+    const IMG_SIZES = ['165', '360', '533', '720', '940']
+    let url = ""
+    for (let i = 0; i < IMG_SIZES.length; i++) {
+      const SIZE = IMG_SIZES[i]
+      url += `https://napoleonejoyas.co/cdn/shop/files/${imagenId}_x${SIZE}.jpg ${SIZE}w, ` // CDN/image.jpg
+    }
+    return url.substring(0, url.length - 2)
+  },
+  getURL(nombre) {
+    return nombre
+    .toLowerCase()
+    .normalize("NFD") // separa acentos
+    .replace(/[\u0300-\u036f]/g, "") // elimina acentos
+    .replace(/[^a-z0-9\s-]/g, "") // elimina símbolos
+    .trim()
+    .replace(/\s+/g, "-") // espacios -> -
+    .replace(/-+/g, "-") // evita ---
   }
 }
 
-async function loadMissingData(url) {
-  const id = url.split('/')[4]
-  const card = mainSection.querySelector(`a[data-id="${id}"]`)
-  if (card) return loadFromCard(card)
-  else return (await api.productos.get(id))[0]
+export const templates = {
+  __proto__: null,
+
+  main({ view, visible, data }) {
+    const isModal = view === 'modal' ? 'modal' : ''
+    const isVisible = visible === true ? 'visible' : ''
+  
+    let id, n, i, s, t, d, p, lp
+
+    if (data) {
+      id = data.id
+      n = data.nombre
+      i = parser.getSrcset(data.main_image_id)
+      s = data.stock
+      t = data.tipo
+      d = data.descripcion
+      p = parser.getPrecio(data.precio)
+      lp = parser.getPrecio(data.precio_anterior)
+    }
+
+    return `<article id="product" class="page ${isModal} ${isVisible}" data-id="${id}" data-click="back">
+      <div class="product-container">
+        <section>
+          <header>
+            <button data-action="back" class="btn-back" aria-label="go back">
+              <svg area-hidden="true">
+                <use href="#icon-arrowback"></use>
+              </svg>
+            </button>
+            <div>
+              <button data-action="like" class="btn-like toggleable" aria-label="add to favorite">
+                <svg area-hidden="true">
+                  <use href="#icon-favorite"></use>
+                </svg>
+                <svg area-hidden="true">
+                  <use href="#icon-favorite-filled"></use>
+                </svg>
+              </button>
+              <button data-action="share" class="btn-share" aria-label="share product">
+                <svg area-hidden="true">
+                  <use href="#icon-share"></use>
+                </svg>
+              </button>
+            </div>
+          </header>
+          <div class="product-images">
+            <img srcset="${i}" decoding="async" sizes="max(500px, 60vw)"
+              alt="product image">
+          </div>
+        </section>
+        <section>
+          <h2>${n}</h2>
+          <div class="product-info">
+            <span class="product-stock">Stock ${s}</span>
+            <span class="product-type">${t}</span>
+          </div>
+          <div class="product-prices">
+            <div class="price">
+              <p>${p}</p>
+              <span>COP</span>
+            </div>
+            <p class="lastprice">${lp}</p>
+          </div>
+          <div class="product-picker">
+            <button data-action="decrement"></button>
+            <input type="number" value="1" min="1" max="99">
+            <button data-action="increment"></button>
+          </div>
+          <aside class="product-actions">
+            <button data-action="whatsapp" class="btn-buy">
+              COMPRAR
+              <svg area-hidden="true">
+                <use href="#icon-wa"></use>
+              </svg>
+            </button>
+            <button data-action="add" class="btn-add">
+              AGREGAR
+              <svg area-hidden="true">
+                <use href="#icon-cart-out"></use>
+              </svg>
+            </button>
+          </aside>
+          <div class="product-description">
+            <p>${d}</p>
+          </div>
+        </section>
+      </div>
+    </article>`
+  }
 }
 
 function pickerBlur(event) {
-  if (event.target.matches('.product input[type=number]')) {
+  if (event.target.matches('input[type=number]')) {
     const input = event.target
     
     let val = +input.value
@@ -41,8 +138,40 @@ function pickerBlur(event) {
   }
 }
 
+async function cargarDatos(card) {
+  let id = card.dataset?.id
+  let info = card instanceof HTMLAnchorElement ?
+  card.querySelector('.pdt-info') : null //Only has main cards
+
+  if (!id) id = card.href.split('/')[4]
+
+  if (!info) {
+    card = document.getElementById('home')
+    ?.querySelector(`a[data-id="${id}"]`)
+  }
+
+  if (!card) {
+    const datos = await api.productos.get(id)
+    return datos[0]
+  } else {
+    info = card.querySelector('.pdt-info').dataset
+  }
+
+  return {
+    __proto__: null,
+    id,
+    nombre: card.querySelector('.pdt-name').textContent,
+    srcset: card.querySelector('img').srcset,
+    stock: info.stock,
+    tipo: info.tipo,
+    precio: card.querySelector('b').textContent,
+    precio_anterior: card.querySelector('s').textContent,
+    descripcion: card.querySelector('.pdt-description').textContent
+  }
+}
+
 export function atras() {
-  if (history.state.isLastState) location.href = '/'
+  if (history.state.isFirstState) location.href = '/'
   else history.back()
 }
 
@@ -76,112 +205,44 @@ export function contactarWhatsapp() {
   window.open(`https://wa.me/573243571105?text=${encodeURIComponent(message)}`, '_blank')
 }
 
-export function guardarEnCarrito(button) {
-  const product = button.closest('.product-container')
-  const input = product.querySelector('.product-picker input')
-  
-  let value = +cartCounter.textContent + (+input.value)
-  localStorage.setItem('cart', value)
-  cartCounter.textContent = value > 99 ? '+99' : value
-}
-
-export function template({view}) {
-  return `<article id="product" class="page ${view === 'modal' ? 'modal' : ''}" data-click="back">
-    <div class="product-container">
-      <section>
-        <header>
-          <button data-action="back" class="btn-back" aria-label="go back">
-            <svg area-hidden="true">
-              <use href="#icon-arrowback"></use>
-            </svg>
-          </button>
-          <div>
-            <button data-action="like" class="btn-like toggleable" aria-label="add to favorite">
-              <svg area-hidden="true">
-                <use href="#icon-favorite"></use>
-              </svg>
-              <svg area-hidden="true">
-                <use href="#icon-favorite-filled"></use>
-              </svg>
-            </button>
-            <button data-action="share" class="btn-share" aria-label="share product">
-              <svg area-hidden="true">
-                <use href="#icon-share"></use>
-              </svg>
-            </button>
-          </div>
-        </header>
-        <div class="product-images">
-          <img srcset="" decoding="async" sizes="max(500px, 60vw)"
-            alt="product image">
-        </div>
-      </section>
-      <section>
-        <h2></h2>
-        <div class="product-info">
-          <span class="product-stock">Stock</span>
-          <span class="product-type">Tipo</span>
-        </div>
-        <div class="product-prices">
-          <div>
-            <p>Ahora</p>
-            <span class="price">
-              0,00 COP
-            </span>
-          </div>
-          <div>
-            <p>Antes</p>
-            <s class="lastprice">
-              10,00
-            </s>
-          </div>
-        </div>
-        <div class="product-picker">
-          <p>Cantidad</p>
-          <div>
-            <button data-action="decrement">-</button>
-            <input type="number" value="1" min="1" max="99">
-            <button data-action="increment">+</button>
-          </div>
-        </div>
-        <aside class="product-actions">
-          <button data-action="whatsapp" class="btn-buy">
-            WHATSAPP
-          </button>
-          <button data-action="add" class="btn-add">
-            AGREGAR
-            <svg area-hidden="true">
-              <use href="#icon-cart-out"></use>
-            </svg>
-          </button>
-        </aside>
-        <div class="product-description">
-          <p>Descripción</p>
-          <p></p>
-        </div>
-      </section>
-    </div>
-  </article>`
-}
-
-export function init() {
-  const modalRoot = document.getElementById('product')
-
-  productModal = {
+export function obtenerDatosCarrito() {
+  return {
     __proto__: null,
-    root: modalRoot,
-    name: modalRoot.querySelector('h2'),
-    image: modalRoot.querySelector('img'),
-    price: modalRoot.querySelector('.price'),
-    lastprice: modalRoot.querySelector('.lastprice'),
-    stock: modalRoot.querySelector('.product-stock'),
-    type: modalRoot.querySelector('.product-type'),
-    description: modalRoot.querySelector('.product-description p:last-child'),
-    input: modalRoot.querySelector('.product-picker input')
+    id: page.root.dataset.id,
+    qty: page.input.value
+  }
+}
+
+// export function guardarEnCarrito(button) {
+//   const product = button.closest('.product-container')
+//   const input = product.querySelector('.product-picker input')
+  
+//   let value = +cartCounter.textContent + (+input.value)
+//   localStorage.setItem('cart', value)
+//   cartCounter.textContent = value > 99 ? '+99' : value
+// }
+
+//Router config
+
+export async function init() {
+  const root = mainSection.lastElementChild
+
+  page = {
+    __proto__: null,
+    root,
+    name: root.querySelector('h2'),
+    image: root.querySelector('img'),
+    stock: root.querySelector('.product-stock'),
+    type: root.querySelector('.product-type'),
+    info: root.querySelector('.product-info'),
+    price: root.querySelector('.price p'),
+    lastprice: root.querySelector('.lastprice'),
+    description: root.querySelector('.product-description p'),
+    input: root.querySelector('.product-picker input')
   }
 
-  productModal.image.decode()
-    .then(() => productModal.image.classList.add('visible'))
+  page.image.decode()
+    .then(() => page.image.classList.add('visible'))
     .catch(() => null)
 
   document.onkeydown = e => {
@@ -192,36 +253,44 @@ export function init() {
   }
 
   document.addEventListener('blur', pickerBlur, true)
+
+  return root
 }
 
 export async function update(card) {
-  productModal.image.classList.remove('visible')
+  page.image.classList.remove('visible')
 
-  productModal.root.firstElementChild.scrollTop = 0
-  productModal.root.querySelector('section:nth-child(2)').scrollTop = 0
+  page.root.querySelector('section:nth-child(2)').scrollTop = 0
 
-  const data = card instanceof HTMLAnchorElement ?
-  loadFromCard(card) : await loadMissingData(card.href)
+  const data = await cargarDatos(card)
 
-  productModal.image.srcset = ''
+  page.image.srcset = ''
 
   const tempImg = new Image()
-  tempImg.srcset = data.main_image_id
+
+  if (data.srcset) {
+    tempImg.srcset = data.srcset
+  } else {
+    tempImg.srcset = parser.getSrcset(data.main_image_id)
+    data.precio = parser.getPrecio(data.precio)
+    data.precio_anterior = parser.getPrecio(data.precio_anterior)
+  }
 
   tempImg.decode().then(() => {
-    productModal.image.classList.add('visible')
-    productModal.image.srcset = tempImg.srcset
+    page.image.classList.add('visible')
+    page.image.srcset = tempImg.srcset
   })
 
-  // if (pdtInfo.stock > 0) '✓ Disponible'
+  const stock = data.stock > 1 ? '✓ Disponible' : `Stock ${data.stock}`
 
-  productModal.type.textContent = data.tipo
-  productModal.stock.textContent = `Stock ${data.stock}`
-  productModal.name.textContent = data.titulo
-  productModal.price.textContent = `${data.precio} COP`
-  productModal.lastprice.textContent = `${data.precio_anterior}`
-  productModal.description.textContent = data.info
-  productModal.input.value = 1
+  page.root.dataset.id = data.id
+  page.name.textContent = data.nombre
+  page.type.textContent = data.tipo
+  page.stock.textContent = stock
+  page.price.textContent = data.precio
+  page.lastprice.textContent = data.precio_anterior
+  page.description.textContent = data.descripcion
+  page.input.value = 1
 }
 
 export function destroy() {

@@ -1,10 +1,7 @@
-import { mainSection, mainPage, progressBar } from '../ui/dom.js'
-import { Notify } from '/js/features/Notify.js'
+let LAST_PAGE = null
 
 const cache = new Map()
 const cssCache = new Set()
-
-let lastPage = null
 
 function getEndpoint(url) { 
   const endpoint = URL.parse(url || location.href).pathname
@@ -13,12 +10,8 @@ function getEndpoint(url) {
   return endpoint
 }
 
-function renderNotFound() {
-  Notify.show({
-    title: 'Error 404',
-    text: 'No se encontró la página.',
-    type: 2
-  })
+function getPathcut(pathname) {
+  return pathname.substring(0, pathname.lastIndexOf('/')) || pathname
 }
 
 async function loadCSS(name) {
@@ -49,28 +42,37 @@ async function loadCSS(name) {
   })
 }
 
+function renderNotFound() {
+  Notify.show({
+    title: 'Error 404',
+    text: 'No se encontró la página.',
+    type: 2
+  })
+}
+
 export async function init() {
   const endpoint = getEndpoint()
   const Module = await import(`/js/features${endpoint}.js`)
-  Module.init()
 
   if (history.state) {
     history.state.view = 'page'
     history.replaceState(history.state, null, location.href)
   } else {
-    history.replaceState({ isLastState: true, view: 'page' }, null, location.href)
+    history.replaceState({ isFirstState: true, view: 'page' }, null, location.href)
   }
+
+  Module.init(history.state)
 
   const config = {
     __proto__: null,
     element: mainPage,
-    lastVisited: location.pathname.substring(0, location.pathname.lastIndexOf('/')) || '/'
+    lastVisited: getPathcut(location.pathname)
   }
 
-  cssCache.add(endpoint)
   cache.set(endpoint, config)
+  cssCache.add(endpoint)
 
-  lastPage = mainPage
+  LAST_PAGE = mainPage
 
   window.onpopstate = e => navigate({ href: location.href }, e.state)
 }
@@ -78,64 +80,67 @@ export async function init() {
 export async function navigate(anchor, options = null) {
   const url = anchor.href
   const endpoint = getEndpoint(url)
-  const pathname = URL.parse(url).pathname
-  const pathcut = pathname.substring(0, pathname.lastIndexOf('/')) || '/'
+  const pathcut = getPathcut(URL.parse(url).pathname)
 
-  let time = setTimeout(() => {
-    document.body.classList.add('waiting')
-    progressBar.classList.add('loading')
-  }, 150)
+  let time = setTimeout(() => { loader.classList.add('active') }, 200)
+
+  // await new Promise(resolve => setTimeout(resolve, 1000))
 
   const Module = (await Promise.all([
     import(`/js/features${endpoint}.js`), loadCSS(endpoint)
   ]).catch(() => {
     clearTimeout(time)
-    document.body.classList.remove('waiting')
-    progressBar.classList.remove('loading', 'loaded')
+    loader.classList.remove('active')
     renderNotFound()
   }))[0]
 
   const config = cache.get(endpoint)
 
-  console.log(endpoint, options)
-
   if (url !== location.href) history.pushState(options, null, url)
   
   if (config?.element) {
-    if (config.lastVisited !== pathcut) await Module.update(anchor)
+    if (config.lastVisited !== pathcut || options?.update) {
+      config.element.scrollTop = 0 // scroll restoration
+      await Module.update(anchor)
+    }
+
     clearTimeout(time)
-    document.body.classList.remove('waiting')
-    progressBar.classList.remove('loading', 'loaded')
-      
+    loader.classList.remove('active')
+
     if (options?.view === 'modal') {
       config.element.classList.add('modal')
     } else {
       config.element.classList.remove('modal')
-      lastPage.classList.remove('visible')
+      LAST_PAGE.classList.remove('visible')
     }
-    
+
     config.element.classList.add('visible')
 
-    lastPage = config.element
+    LAST_PAGE = config.element
     config.lastVisited = pathcut
     return
   }
 
-  if (options?.view !== 'modal') lastPage?.classList.remove('visible')
+  let tpl = Module.templates.main(options)
 
-  mainSection.insertAdjacentHTML('beforeend', Module.template(options))
-  await Module.init(options)
+  if (tpl instanceof Array) tpl = tpl.join("")
+
+  mainSection.insertAdjacentHTML('beforeend', tpl)
+
+  const element = await Module.init(options)
+
   await Module.update(anchor)
 
-  let element = mainSection.lastElementChild
-  element.classList.add('visible')
-  lastPage = element
+  if (options?.view !== 'modal') LAST_PAGE?.classList.remove('visible')
 
   cache.set(endpoint, { element, lastVisited: pathcut })
 
-  progressBar.classList.add('loaded')
-  setTimeout(() => progressBar.classList.remove('loaded', 'loading'), 100)
+  LAST_PAGE = element
 
   clearTimeout(time)
-  document.body.classList.remove('waiting')
+  
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    element.classList.add('visible')
+    loader.classList.remove('active')
+  }))
 }

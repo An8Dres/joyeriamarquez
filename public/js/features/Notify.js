@@ -1,13 +1,11 @@
-import { notifyElement } from '../ui/dom.js'
-
 let timeOutId = undefined
 
 const classType = ['info', 'warn','error']
 
-export const Notify = {
+const Notify = {
   __proto__: null,
 
-  async show({title = 'Notify', text = 'This is a notify', type = 0, handler = () => {}}) {
+  show({title = 'Notify', text = 'This is a notify', type = 0, handler = () => {}}) {
     notifyElement.classList.remove('open')
     try {
       handler()
@@ -25,9 +23,7 @@ export const Notify = {
     } catch (err) {
       console.error('No se pudo monstrar la notificación: ', err)
     }
-  }
-}
+  },
 
-export function close() {
-  notifyElement.classList.remove('open')
+  close() { notifyElement.classList.remove('open') }
 }

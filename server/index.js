@@ -2,7 +2,8 @@ import express from 'express'
 import compression from 'compression'
 import navRouter from './routes/nav.js'
 import apiRouter from './routes/api.js'
-import { getRecent, getPopular } from './utils/initLoad.js'
+
+import { home } from './utils/init.js'
 
 const app = express()
 const port = 5500
@@ -23,10 +24,10 @@ let cache = null
 app.get('/', async (req, res) => {
   if (!cache) cache = {
     __proto__: null,
-    popularCards: await getPopular(),
-    recentCards: await getRecent()
+    name: 'home',
+    template: await home()
   }
-  res.render('index', cache)
+  res.render('template', cache)
 })
 
 app.listen(port, () => {

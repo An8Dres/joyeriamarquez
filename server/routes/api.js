@@ -1,6 +1,5 @@
 import { Router } from 'express'
 import sql from '../utils/db.js'
-import Format from '../utils/Format.js'
 
 const apiRouter = Router()
 
@@ -25,24 +24,24 @@ apiRouter.post('/products/:type', async (req, res) => {
         return res.sendStatus(404)
     }
 
-    res.status(200).json(Format.productParser(productos))
+    res.status(200).json(productos)
   } catch (err) {
     console.error('ERROR:', err.message)
     res.sendStatus(500)
   }
 })
 
-apiRouter.put('/update/:type', async (req, res) => {
-  switch (req.params.type) {
-    case 'stock':
-      const { id, stock } = req.body
-      const data = await sql`UPDATE productos SET stock = ${stock} WHERE id = ${id}`
-      data.length ? res.sendStatus(404) : res.sendStatus(204) 
-    break
-    default:
-      res.sendStatus(404)
+apiRouter.post('/cart', async (req, res) => {
+  try {
+    const ids = req.body
+
+    let productos = await sql`SELECT id, nombre, main_image_id, precio, stock FROM productos WHERE id = ANY(${ids})`
+
+    res.status(200).json(productos)
+  } catch (err) {
+    console.error('ERROR:', err.message)
+    res.sendStatus(500)
   }
-  
 })
 
 export default apiRouter

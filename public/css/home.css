@@ -39,7 +39,7 @@
   .add-panel div {
     width: min(70%, 600px);
     height: calc(100% - 1.5rem);
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -157,7 +157,7 @@
     display: flex;
     gap: 1rem;
     overflow-x: auto;
-    overflow-y: hidden;
+    overflow-y: visible;
   }
 
   ::-webkit-scrollbar {
@@ -167,16 +167,15 @@
 
 .product-card {
   flex-shrink: 0;
-  background-color: #fff6;
+  background-color: var(--glassy2);
   width: 200px;
-  border: 1px solid #fff4;
+  border: 1px solid #fff3;
   border-top-color: #fff6;
   border-left-color: #fff6;
   border-radius: 1rem;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 10px 10px -8px #0003,
-  inset -2px 2px 5px #fff4;
+  box-shadow: 0 10px 10px -8px var(--shadowColor);
   cursor: pointer;
   text-decoration: none;
 }
@@ -188,8 +187,8 @@
   color: #fff;
   /* border: 1px solid #ecd8ae; */
   padding: 0.2rem .4rem;
-  border-top-left-radius: .8rem;
-  border-bottom-right-radius: .8rem;
+  border-top-left-radius: .9rem;
+  border-bottom-right-radius: .9rem;
   position: absolute;
   top: 0;
   left: 0;
@@ -199,15 +198,13 @@
 .pdt-image {
   flex-shrink: 0;
   height: 140px;
-  /* padding: 0.3rem;
-  padding-bottom: 0; */
   position: relative;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 0.8rem;
+    border-radius: .9rem;
     opacity: 0;
     transition: opacity .7s ease;
   }
@@ -226,13 +223,14 @@
 .pdt-name {
   font-size: 0.9rem;
   font-weight: bold;
-  color: var(--secondColor);
+  color: var(--titleColor);
   width: 100%;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: .5px;
 }
 
 .pdt-description {
@@ -246,6 +244,7 @@
 .pdt-price {
   font-size: 0.9rem;
   margin-top: auto;
+  margin-bottom: 0.2rem;
   display: flex;
   justify-content: space-between;
   line-height: 1rem;
@@ -262,7 +261,6 @@
 
   &::before {
     content: '$';
-    display: inline-block;
   }
 }
 
@@ -277,14 +275,14 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 1rem;
-    row-gap: 2rem;
+    row-gap: 1.5rem;
   }
 }
 
 #main-card__container .product-card {
   width: 100%;
   height: 100%;
-  border-radius: 1rem;
+  border-radius: 1.5rem;
   aspect-ratio: 4/5;
 }
 
@@ -299,12 +297,12 @@
 #main-card__container .pdt-image {
   height: 60%;
   img {
-    border-radius: 1rem;
+    border-radius: 1.5rem;
   }
 }
 
 #main-card__container .pdt-btn {
-  background-color: #fff8;
+  background-color: var(--glassyColor);
   width: 2rem;
   height: 2rem;
   border: 1px solid var(--glassyColor);
@@ -318,10 +316,11 @@
   cursor: pointer;
 
   svg {
-    fill: var(--mainColor);
+    fill: var(--secondColor);
     width: 1rem;
     height: 1rem;
-    position: absolute
+    margin-top: .1rem;
+    position: absolute;
   }
 }
 
@@ -329,13 +328,10 @@
   padding: .8rem;
 }
 
-@media screen and (width < 650px) {
+@media screen and (width < 700px) {
   #home {
-    padding: 0;
-
     .add-panel {
       width: 100%;
-      padding: 0 0.5rem 1rem;
       border-radius: 0.2rem;
     }
 
@@ -370,35 +366,30 @@
     }
   }
 
-  #popular-card__container {
-    padding: 0 1rem;
-  }
-
   #main-card__container {
-    padding: 0 1rem 1rem;
-
     > div {
-      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: .5rem;
+      row-gap: 1rem;
     }
 
     .pdt-info {
-      padding: .6rem;
-      gap: .2rem;
+      padding: .5rem;
+      gap: .1rem;
     }
 
     .pdt-name {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       -webkit-line-clamp: 1;
     }
 
     .pdt-description {
-      font-size: 0.7rem;
+      font-size: 0.6rem;
     }
 
     .pdt-price {
-      font-size: .8rem;
-      line-height: .8rem;
+      font-size: .7rem;
+      line-height: .7rem;
     }
   }
 }

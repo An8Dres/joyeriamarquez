@@ -13,7 +13,7 @@ async function request(endpoint, options = {}) {
   }
 }
 
-export const api = {
+const api = {
   __proto__: null,
 
   productos: {
@@ -25,6 +25,7 @@ export const api = {
 
   carrito: {
     __proto__: null,
-    getGuardados: (userId) => request('/cart', { id: userId })
+    get: (items) => request('/cart', items)
+    // getGuardados: (userId) => request('/cart', { id: userId })
   }
 }

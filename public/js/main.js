@@ -1,21 +1,25 @@
-import { navSelect, cartCounter, mainSection } from './ui/dom.js'
-
 let lastAnchor = navSelect
+
+const accionesPropias = {
+  manejarNav,
+  cerrarNotificacion: () => Notify.close()
+}
 
 const acciones = {
   __proto__: null,
-  manejarNav,
   nav:         ['.', 'manejarNav'],
-  closeNotify: ['/features/Notify', 'close'],
-  navigate:    ['/services/router', 'navigate'],
+  closeNotify: ['.', 'cerrarNotificacion'],
+  navigate:    ['/services/router', 'navigate', { view: 'page'}],
   modal:       ['/services/router', 'navigate', { view: 'modal' }],
+  update:      ['/services/router', 'navigate', { update: true }],
   back:        ['/features/product', 'atras'],
   share:       ['/features/product', 'compartir'],
   like:        ['/features/product', 'manejarLike'],
   increment:   ['/features/product', 'manejarContador'],
   decrement:   ['/features/product', 'manejarContador'],
   whatsapp:    ['/features/product', 'contactarWhatsapp'],
-  add:         ['/features/product', 'guardarEnCarrito'],
+  add:         ['/features/cart', 'agregarProducto'],
+  remove:      ['/features/cart', 'removerProducto'],
 }
 
 function manejarNav(anchor) {
@@ -40,7 +44,7 @@ function ejecutar(nombreAccion, target) {
     target.dataset.loading = "true"
 
     if (config[0] === '.') {
-      acciones[config[1]](target)
+      accionesPropias[config[1]](target)
       return
     }
 
@@ -78,9 +82,16 @@ document.onreadystatechange = () => {
   }
 }
 
-document.addEventListener('DOMContentLoaded', async ()=> {
-  cartCounter.textContent = localStorage.getItem('cart') || 0
-  import('./services/router.js').then(m => m.init())
+document.addEventListener('DOMContentLoaded', async () => {
+  const cartCount = localStorage.getItem('cart-counter')
+
+  if (cartCount) {
+    cartCounter.textContent = cartCount
+    cartCounter.classList.add('visible')
+  }
+
+  const router = await import('./services/router.js')
+  router.init()
 })
 
 mainSection.addEventListener('load', e => {

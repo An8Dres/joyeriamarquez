@@ -1,56 +1,118 @@
-let homePage
+let page
+
 let recentId = 0
 let popularId = 0
 let isLoading = false
-let api, ui
 
-export function tplNuevos(array) {
-  let htmlBuffer = ''
+const parser = {
+  __proto__: null,
+  getNumero(precio) {
+    const texto = String(precio)
+    const textoSinPuntos = texto.replace(/\./g, "")
+    return Number(textoSinPuntos)
+  },
+  getPrecio(numero) {
+    let texto = numero.toString()
+    return texto.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+  },
+  getSrcset(imagenId) {
+    const IMG_SIZES = ['165', '360', '533', '720', '940']
+    let url = ""
+    for (let i = 0; i < IMG_SIZES.length; i++) {
+      const SIZE = IMG_SIZES[i]
+      url += `https://napoleonejoyas.co/cdn/shop/files/${imagenId}_x${SIZE}.jpg ${SIZE}w, ` // CDN/image.jpg
+    }
+    return url.substring(0, url.length - 2)
+  },
+  getURL(nombre) {
+    return nombre
+    .toLowerCase()
+    .normalize("NFD") // separa acentos
+    .replace(/[\u0300-\u036f]/g, "") // elimina acentos
+    .replace(/[^a-z0-9\s-]/g, "") // elimina símbolos
+    .trim()
+    .replace(/\s+/g, "-") // espacios -> -
+    .replace(/-+/g, "-") // evita ---
+  }
+}
 
-  for (let i = 0; i < array.length; i++) {
-    const prod = array[i]
+export const templates = {
+  __proto__: null,
+  main({ visible }) {
+    const isVisible = visible === true ? 'visible' : ''
+
+    let part1 = `
+    <article id="home" class="page ${isVisible}">
+      <div class="add-panel">
+        <img src="/images/nuevo-banner.webp" alt="Banner add product">
+        <div>
+          <h2>EDICIÓN LIMITADA: LA COLECCIÓN DE ESMERALDAS REALEZA</h2>
+          <p>Joyas artesanales con el más fino oro de 18k y gemas certificadas. Diseñadas para deslumbrar.</p>
+          <button>VER LA COLECCIÓN</button>
+        </div>
+      </div>
+      <div id="popular-card__container">
+        <header>
+          <h2>Populares</h2>
+          <button>Ver todos</button>
+        </header>
+        <div>`
+    let part2 = `
+        </div>
+      </div>
+      <div id="main-card__container">
+        <header><h2>Todos</h2></header>
+        <div>`
+    let part3 = `
+        </div>
+      </div>
+    </article>`
+
+    return [part1, '', part2, '', part3]
+  },
+  populares(array) {
+    let htmlBuffer = ''
+
+    for (let i = 0; i < array.length; i++) {
+      const p = array[i]
+      htmlBuffer += `
+      <a href="/product/${p.id}/${parser.getURL(p.nombre)}" class="product-card" data-id="${p.id}" data-action="modal">
+        <div class="pdt-image">
+          <span class="pdt-target">Más vendido</span>
+          <img sizes="300px" alt="producto" decoding="async" loading="lazy" srcset="${parser.getSrcset(p.main_image_id)}">
+        </div>
+        <div class="pdt-info" data-tipo="${p.tipo}" data-stock="${p.stock}" data-precio="${p.precio}">
+          <span class="pdt-name">${p.nombre}</span>
+          <span class="pdt-description">${p.descripcion}</span>
+        <span class="pdt-price"><b>${parser.getPrecio(p.precio)}</b><s>${parser.getPrecio(p.precio_anterior)}</s></span>
+        </div>
+      </a>`
+    }
+    return htmlBuffer
+  },
+  nuevos(array) {
+    let htmlBuffer = ''
+
+    for (let i = 0; i < array.length; i++) {
+    const p = array[i]
     htmlBuffer += `
-      <a href="${prod.href}" class="product-card" data-id="${prod.id}" data-action="modal">
+      <a href="/product/${p.id}/${parser.getURL(p.nombre)}" class="product-card" data-id="${p.id}" data-action="modal">
         <div class="pdt-image">
           <button class="pdt-btn toggleable" data-action="like" aria-label="button add to favorites">
             <svg aria-hidden="true"><use href="#icon-favorite"></use></svg>
             <svg aria-hidden="true"><use href="#icon-favorite-filled"></use></svg>
           </button>
-          <img sizes="360px" alt="producto" decoding="async" loading="lazy" srcset="${prod.main_image_id}">
+          <img sizes="360px" alt="producto" decoding="async" loading="lazy" srcset="${parser.getSrcset(p.main_image_id)}">
         </div>
-        <div class="pdt-info" data-type="${prod.tipo}" data-stock="${prod.stock}">
-          <span class="pdt-name">${prod.titulo}</span>
-          <span class="pdt-description">${prod.info}</span>
-        <span class="pdt-price"><b>${prod.precio}</b><s>${prod.precio_anterior}</s></span>
+        <div class="pdt-info" "data-imagen="${p.main_image_id}" data-tipo="${p.tipo}" data-stock="${p.stock}" data-precio="${p.precio}">
+          <span class="pdt-name">${p.nombre}</span>
+          <span class="pdt-description">${p.descripcion}</span>
+        <span class="pdt-price"><b>${parser.getPrecio(p.precio)}</b><s>${parser.getPrecio(p.precio_anterior)}</s></span>
         </div>
-      </a>
-    `
-  }
-
-  return htmlBuffer
-}
-
-export function tplPopulares(array) {
-  let htmlBuffer = ''
-
-  for (let i = 0; i < array.length; i++) {
-    const prod = array[i]
-    htmlBuffer += `
-      <a href="${prod.href}" class="product-card" data-id="${prod.id}" data-action="modal">
-        <div class="pdt-image">
-          <span class="pdt-target">Más vendido</span>
-          <img sizes="300px" alt="producto" decoding="async" loading="lazy" srcset="${prod.main_image_id}">
-        </div>
-        <div class="pdt-info" data-type="${prod.tipo}" data-stock="${prod.stock}">
-          <span class="pdt-name">${prod.titulo}</span>
-          <span class="pdt-description">${prod.info}</span>
-        <span class="pdt-price"><b>${prod.precio}</b><s>${prod.precio_anterior}</s></span>
-        </div>
-      </a>
-    `
-  }
-
-  return htmlBuffer
+      </a>`
+    }
+    return htmlBuffer
+  },
 }
 
 async function cargarNuevos() {
@@ -61,7 +123,7 @@ async function cargarNuevos() {
 
   recentId = productos[len - 1]?.id || recentId
 
-  homePage.recentContainer.insertAdjacentHTML('beforeend', tplNuevos(productos))
+  page.recentContainer.insertAdjacentHTML('beforeend', templates.nuevos(productos))
 }
 
 async function cargarPopulares() {
@@ -72,70 +134,46 @@ async function cargarPopulares() {
 
   popularId = productos[len - 1]?.id || popularId
 
-  homePage.popularContainer.insertAdjacentHTML('beforeend', tplPopulares(productos))
+  page.popularContainer.insertAdjacentHTML('beforeend', templates.populares(productos))
 }
 
-export function template() {
-  return `<section id="home" class="page visible">
-    <div class="add-panel">
-      <img src="/iconos/banner.avif" alt="Banner add product">
-      <div>
-        <h2>EDICIÓN LIMITADA: LA COLECCIÓN DE ESMERALDAS REALEZA</h2>
-        <p>Joyas artesanales con el más fino oro de 18k y gemas certificadas. Diseñadas para deslumbrar.</p>
-        <button>VER LA COLECCIÓN</button>
-      </div>
-    </div>
-    <div id="popular-card__container">
-      <header>
-        <h2>Populares</h2>
-        <button>Ver todos</button>
-      </header>
-      <div>
-      </div>
-    </div>
-    <div id="main-card__container">
-      <header><h2>Todos</h2></header>
-      <div>
-      </div>
-    </div>
-  </section>`
-}
-
+//Router config
 export async function init() {
-  [ui, { api }] = await Promise.all([
-    import('/js/ui/dom.js'),
-    import('/js/services/api.js')
-  ])
+  const root = mainSection.lastElementChild
 
-  const root = ui.mainSection.querySelector('#home')
-
-  homePage = {
+  page = {
     __proto__: null,
     root,
     recentContainer: root.querySelector('#main-card__container div'),
     popularContainer: root.querySelector('#popular-card__container div')
   }
-  
-  root.onscroll = async ()=> {
+
+  if (page.popularContainer.lastElementChild !== null) {
+    recentId = page.recentContainer.lastElementChild.dataset.id
+    popularId = page.popularContainer.lastElementChild.dataset.id
+  }
+
+  root.onscroll = async () => {
     if (!isLoading && root.scrollTop > root.scrollHeight * 0.6){
       isLoading = true
       await cargarNuevos()
-      setTimeout(()=> {isLoading = false}, 100)
+      isLoading = false
     }
   }
 
-  if (homePage.popularContainer.lastElementChild !== null) {
-    recentId = homePage.recentContainer.lastElementChild.dataset.id
-    popularId = homePage.popularContainer.lastElementChild.dataset.id
-  }
+  root.classList.add('visible')
+
+  return root
 }
 
 export async function update() {
   cargarPopulares()
   cargarNuevos()
+
+  // cuando hayan pasado 5 min o así
 }
 
 export function destroy() {
-  homePage.root.onscroll = null
-  homePage = null
+  page.root.onscroll = null
+  page = null
 }
