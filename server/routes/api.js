@@ -174,11 +174,8 @@ apiRouter.patch('/:id', async (req, res) => {
                 return res.status(400).json({
                     message: 'El precio no es válido'
                 })
-
             }
-
         }
-
 
         /* -----------------------------------------
            VALIDAR STOCK
@@ -187,33 +184,28 @@ apiRouter.patch('/:id', async (req, res) => {
         let stockNumero = null
 
         if (stock !== undefined) {
-
             stockNumero = Number(stock)
 
-            if (
-                !Number.isInteger(stockNumero) ||
-                stockNumero < 0
-            ) {
-
+            if (!Number.isInteger(stockNumero) || stockNumero < 0) {
                 return res.status(400).json({
                     message: 'El stock no es válido'
                 })
-
             }
-
         }
-
 
         /* -----------------------------------------
            ACTUALIZAR
         ----------------------------------------- */
+
+        console.log('Precio recibido del front:', precioNumero)
+        
+        if (precioNumero) await sql`UPDATE productos SET precio_anterior = precio WHERE id = ${id}`
 
         const [producto] = await sql`
             UPDATE productos
             SET
                 nombre = COALESCE(${titulo ?? null}, nombre),
                 descripcion = COALESCE(${info ?? null}, descripcion),
-                precio_anterior = precio,
                 precio = COALESCE(${precioNumero}, precio),
                 stock = COALESCE(${stockNumero}, stock)
 
