@@ -12,17 +12,28 @@ const parser = {
     return Number(textoSinPuntos)
   },
   getPrecio(numero) {
-    let texto = numero.toString()
-    return texto.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    let texto = numero?.toString()
+    return texto?.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
   },
-  getSrcset(imagenId) {
-    const IMG_SIZES = ['165', '360', '533', '720', '940']
-    let url = ""
-    for (let i = 0; i < IMG_SIZES.length; i++) {
-      const SIZE = IMG_SIZES[i]
-      url += `https://napoleonejoyas.co/cdn/shop/files/${imagenId}_x${SIZE}.jpg ${SIZE}w, ` // CDN/image.jpg
-    }
-    return url.substring(0, url.length - 2)
+  getSrcset(urlOriginal) {
+    //generar Srcset para Cloudinary
+    const anchos = [300, 600, 900, 1200, 1800]
+    
+    const uploadIndex = urlOriginal.indexOf('/upload/');
+    
+    if (uploadIndex === -1) return urlOriginal
+
+    const basePart = urlOriginal.substring(0, uploadIndex + 8)
+    const imageId = urlOriginal.substring(uploadIndex + 8)
+
+    const lineasSrcset = anchos.map(ancho => {
+      const parametros = `w_${ancho},f_auto,q_auto`;
+      const urlTransformada = `${basePart}${parametros}/${imageId}`;
+      
+      return `${urlTransformada} ${ancho}w`
+    });
+
+    return lineasSrcset.join(',\n')
   },
   getURL(nombre) {
     return nombre
@@ -44,7 +55,7 @@ export const templates = {
     let part1 = `
     <article id="home" class="page ${isVisible}">
       <div class="add-panel">
-        <img src="/images/nuevo-banner.webp" alt="Banner add product">
+        <img src="/images/banner-esmeralda.webp" alt="Banner add product">
         <div>
           <h2>EDICIÓN LIMITADA: LA COLECCIÓN DE ESMERALDAS REALEZA</h2>
           <p>Joyas artesanales con el más fino oro de 18k y gemas certificadas. Diseñadas para deslumbrar.</p>
@@ -102,7 +113,7 @@ export const templates = {
             <svg aria-hidden="true"><use href="#icon-favorite"></use></svg>
             <svg aria-hidden="true"><use href="#icon-favorite-filled"></use></svg>
           </button>
-          <img sizes="360px" alt="producto" decoding="async" loading="lazy" srcset="${parser.getSrcset(p.main_image_id)}">
+          <img sizes="300px" alt="producto" decoding="async" loading="lazy" srcset="${parser.getSrcset(p.main_image_id)}">
         </div>
         <div class="pdt-info" "data-imagen="${p.main_image_id}" data-tipo="${p.tipo}" data-stock="${p.stock}" data-precio="${p.precio}">
           <span class="pdt-name">${p.nombre}</span>

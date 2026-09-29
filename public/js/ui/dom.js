@@ -1,8 +1,5 @@
 const navSelect = document.querySelector('.aside .selected')
 const mainSection = document.getElementById('main-section')
-const mainHeader = document.getElementById('main-header')
 const mainPage = document.querySelector('.page')
-const btnCart = document.getElementById('btn-cart')
-const cartCounter = mainHeader.querySelector('.cart-counter')
 const notifyElement = document.querySelector('.notify')
 const loader = document.getElementById('loader')

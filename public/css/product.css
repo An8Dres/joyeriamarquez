@@ -4,6 +4,7 @@
 
   &:not(.modal) {
     padding: 0;
+    padding-top: 2rem;
   }
 }
 
@@ -282,6 +283,7 @@
 }
 
 .btn-add {
+  display: none !important;
   background-color: var(--glassy2);
   color: var(--textColor);
   box-shadow: 0 4px 5px -2px #0003;
@@ -350,11 +352,17 @@
 } */
 
 @media (width < 1000px) {
+  #product:not(.modal) {
+    padding: 0;
+  }
+
   .product-container {
     padding-left: 1rem;
 
     section:nth-child(2) {
+      background-color: var(--bgColor);
       padding: 1rem;
+      
     }
 
     header {

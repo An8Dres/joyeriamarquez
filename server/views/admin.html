@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Panel de administración</title>
+
+    <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+
+<body>
+
+    <main class="dashboard">
+
+        <header class="dashboard-header">
+            <div>
+                <h1>Panel de administración</h1>
+                <p>Gestiona los productos de tu tienda.</p>
+            </div>
+        </header>
+
+
+        <!-- =========================
+             CREAR PRODUCTO
+        ========================== -->
+
+        <section class="panel">
+
+            <div class="panel-header">
+                <h2>Crear producto</h2>
+                <p>Agrega un nuevo producto a la tienda.</p>
+            </div>
+
+            <form id="create-product-form" enctype="multipart/form-data">
+
+                <div class="form-group">
+                    <label for="create-title">
+                        Título
+                    </label>
+
+                    <input
+                        type="text"
+                        id="create-title"
+                        name="titulo"
+                        placeholder="Nombre del producto"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="create-description">
+                        Descripción
+                    </label>
+
+                    <textarea
+                        id="create-description"
+                        name="info"
+                        placeholder="Descripción del producto"
+                        rows="5"
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="create-price">
+                            Precio
+                        </label>
+
+                        <input
+                            type="number"
+                            id="create-price"
+                            name="precio"
+                            min="0"
+                            placeholder="0"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="create-stock">
+                            Stock
+                        </label>
+
+                        <input
+                            type="number"
+                            id="create-stock"
+                            name="stock"
+                            min="0"
+                            step="1"
+                            placeholder="0"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="create-image">
+                        Imagen
+                    </label>
+
+                    <input
+                        type="file"
+                        id="create-image"
+                        name="imagen"
+                        accept="image/*"
+                        required
+                    >
+
+                </div>
+
+
+                <button type="submit" class="button primary">
+                    Crear producto
+                </button>
+
+            </form>
+
+            <p id="create-message" class="message"></p>
+
+        </section>
+
+
+
+        <!-- =========================
+             EDITAR PRODUCTO
+        ========================== -->
+
+        <section class="panel">
+
+            <div class="panel-header">
+                <h2>Editar producto</h2>
+                <p>Introduce el ID del producto que quieres modificar.</p>
+            </div>
+
+
+            <form id="edit-product-form">
+
+                <div class="form-group">
+
+                    <label for="edit-id">
+                        ID del producto
+                    </label>
+
+                    <input
+                        type="number"
+                        id="edit-id"
+                        name="id"
+                        min="1"
+                        placeholder="Ej: 25"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="edit-title">
+                        Nuevo título
+                    </label>
+
+                    <input
+                        type="text"
+                        id="edit-title"
+                        name="titulo"
+                        placeholder="Nombre del producto"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="edit-description">
+                        Nueva descripción
+                    </label>
+
+                    <textarea
+                        id="edit-description"
+                        name="info"
+                        rows="5"
+                        placeholder="Nueva descripción"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="edit-price">
+                            Nuevo precio
+                        </label>
+
+                        <input
+                            type="number"
+                            id="edit-price"
+                            name="precio"
+                            min="0"
+                            step="1"
+                            placeholder="Dejar vacío para no modificar"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="edit-stock">
+                            Nuevo stock
+                        </label>
+
+                        <input
+                            type="number"
+                            id="edit-stock"
+                            name="stock"
+                            min="0"
+                            step="1"
+                            placeholder="Dejar vacío para no modificar"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <button type="submit" class="button primary">
+                    Guardar cambios
+                </button>
+
+            </form>
+
+            <p id="edit-message" class="message"></p>
+
+        </section>
+
+
+
+        <!-- =========================
+             ELIMINAR PRODUCTO
+        ========================== -->
+
+        <section class="panel danger-panel">
+
+            <div class="panel-header">
+
+                <h2>Eliminar producto</h2>
+
+                <p>
+                    Introduce el ID del producto que deseas eliminar.
+                </p>
+
+            </div>
+
+
+            <form id="delete-product-form">
+
+                <div class="form-group">
+
+                    <label for="delete-id">
+                        ID del producto
+                    </label>
+
+                    <input
+                        type="number"
+                        id="delete-id"
+                        name="id"
+                        min="1"
+                        placeholder="Ej: 25"
+                        required
+                    >
+
+                </div>
+
+
+                <button type="submit" class="button danger">
+                    Eliminar producto
+                </button>
+
+            </form>
+
+            <p id="delete-message" class="message"></p>
+
+        </section>
+
+
+    </main>
+
+
+    <script src="/js/dashboard.js"></script>
+
+</body>
+</html>

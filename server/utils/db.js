@@ -1,7 +1,5 @@
-import dotenv from 'dotenv'
+import 'dotenv/config'
 import postgres from 'postgres'
-
-dotenv.config()
 
 const sql = postgres({
   host: process.env.DB_HOST,

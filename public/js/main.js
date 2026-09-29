@@ -83,13 +83,6 @@ document.onreadystatechange = () => {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  const cartCount = localStorage.getItem('cart-counter')
-
-  if (cartCount) {
-    cartCounter.textContent = cartCount
-    cartCounter.classList.add('visible')
-  }
-
   const router = await import('./services/router.js')
   router.init()
 })

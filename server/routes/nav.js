@@ -11,19 +11,30 @@ const templates = {
 
 const navRouter = new Router()
 
+function getPrecio(numero) {
+    let texto = numero.toString()
+    return texto.replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+}
+
+function optimizarImagen(url, ancho) {
+  const parametros = `w_${ancho},f_auto,q_auto`
+  return url.replace('/upload/', `/upload/${parametros}/`)
+}
+
 async function loadProduct(req, res) {
   try {
     const result = await sql`SELECT * FROM productos WHERE id = ${req.params.id}`
     const product = result[0]
-    const idImage = product.main_image_id
+    const imageUrl = product.main_image_id
 
     // if (req.originalUrl !== product.nombre) return res.redirect(product.href)
     
     const data = {
       __proto__: null,
       name: 'product',
-      ogImage: `https://napoleonejoyas.co/cdn/shop/files/${idImage}_x533.jpg`, //CDN
-      template: tplProduct.main({ visible: true, data: product })
+      template: tplProduct.main({ visible: true, data: product }),
+      ogImage: optimizarImagen(imageUrl, 500), //CDN
+      descripcion: `$${getPrecio(product.precio)} - ${product.nombre}`
     }
 
     res.render('template', data)
@@ -39,6 +50,11 @@ navRouter.get('/product/:id/:slug', loadProduct)
 navRouter.get('/:slug', async (req, res) => {
   const page = req.params.slug
   let template = templates[page]
+
+  if (page === 'admin') {
+    // return res.sendFile('admin.html', { root: 'public' })
+    return res.sendFile(process.cwd() + '/server/views/admin.html')
+  }
 
   if (!template) return res.sendStatus(404)
   else res.render('template', { name: 'cart', template })

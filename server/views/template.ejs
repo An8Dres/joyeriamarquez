@@ -5,11 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description"
-    content="Descubre joyería fina hecha a mano. Anillos de compromiso, collares y pulseras en oro y plata. Diseños únicos para momentos inolvidables. Compra online.">
+    content="<%= descripcion %>">
   <meta property="og:title" content="JOYERIA MARQUEZ">
   <meta property="og:description"
-    content="Descubre joyería fina hecha a mano. Anillos de compromiso, collares y pulseras en oro y plata. Diseños únicos para momentos inolvidables. Compra online.">
-  <meta property="og:image" content="https://an8dres.github.io/joyeriamarquez/iconos/preview.png">
+    content="<%= descripcion %>">
+  <meta property="og:image" content="<%= ogImage %>">
   <meta property="og:url" content="https://an8dres.github.io/joyeriamarquez">
   <meta property="og:type" content="website">
   <!-- Twitter Meta Tags -->
@@ -17,8 +17,8 @@
   <meta property="twitter:domain" content="an8dres.github.io">
   <meta property="twitter:url" content="https://an8dres.github.io/joyeriamarquez/">
   <meta name="twitter:title" content="JOYERIA MARQUEZ">
-  <meta name="twitter:description" content="Descubre joyería fina hecha a mano. Anillos de compromiso, collares y pulseras en oro y plata. Diseños únicos para momentos inolvidables. Compra online.">
-  <meta name="twitter:image" content="https://an8dres.github.io/joyeriamarquez/iconos/preview.png">
+  <meta name="twitter:description" content="<%= descripcion %>">
+  <meta name="twitter:image" content="<%= ogImage %>">
   
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/<%= name %>.css">
@@ -30,7 +30,6 @@
   <link rel="modulepreload" href="/js/ui/dom.js">
   <link rel="modulepreload" href="/js/main.js">
   <link rel="modulepreload" href="/js/services/api.js">
-  <link rel="modulepreload" href="/js/services/parser.js">
   <link rel="modulepreload" href="/js/services/router.js">
 
   <link rel="modulepreload" href="/js/features/<%= name %>.js">
@@ -58,70 +57,11 @@
             </svg>
             <span>Inicio</span>
           </a>
-          <a href="/search" data-action="nav">
-            <svg area-hidden="true" class="icon">
-              <use href="#icon-search"></use>
-            </svg>
-            <span>Buscar</span>
-          </a>
-          <!-- <a href="/orders" disabled>
-            <svg area-hidden="true" class="icon">
-              <use href="#icon-bag"></use>
-            </svg>
-            <span>Pedidos</span>
-          </a> -->
-          <a href="/favorites" data-action="nav">
-            <svg area-hidden="true" class="icon">
-              <use href="#icon-favorite"></use>
-            </svg>
-            <span>Favoritos</span>
-          </a>
-          <a href="/offers" id="offers" data-action="nav">
-            <svg area-hidden="true" class="icon">
-              <use href="#icon-off"></use>
-            </svg>
-            <span>Ofertas</span>
-          </a>
-          <a href="/profile" data-action="nav">
-            <svg area-hidden="true" class="icon">
-              <use href="#icon-profile"></use>
-            </svg>
-            <span>Perfil</span>
-          </a>
           <span id="nav-selector"></span>
         </nav>
       </div>
     </aside>
     <section id="main-section">
-      <header id="main-header">
-        <div class="hdr-title">
-          <p>¡Bienvenido!</p>
-          <p>¿Que deseas ver hoy?</p>
-        </div>
-        <div class="hdr-search">
-          <span></span>
-          <input type="text" id="input-search" placeholder="Buscar, una pulsera de oro...">
-          <svg>
-            <use href="#icon-search"></use>
-          </svg>
-        </div>
-        <div class="hdr-buttons">
-          <a href="/notifications" id="btn-notify" aria-label="Notificaciones">
-            <svg aria-hidden="true">
-              <use href="#icon-notify"></use>
-            </svg>
-          </a>
-          <a href="/cart" id="btn-cart" data-action="update" aria-label="Carrito de compras">
-            <svg aria-hidden="true">
-              <use href="#icon-cart"></use>
-            </svg>
-            <span class="cart-counter">0</span>
-          </a>
-          <a href="/profile" id="btn-profile" aria-label="Perfil">
-            <span>A</span>
-          </a>
-        </div>
-      </header>
       <%- template %>
     </section>
   </main>
