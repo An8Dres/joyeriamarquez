@@ -51,10 +51,6 @@ app.get('/', async (req, res) => {
     res.render('template', cache)
 })
 
-app.get('/health', (req, res) => {
-  res.status(200).send('OK')
-})
-
 app.listen(port, () => {
     console.log(
         "Servidor escuchando en puerto",

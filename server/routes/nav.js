@@ -51,7 +51,9 @@ navRouter.get('/:slug', async (req, res) => {
   const page = req.params.slug
   let template = templates[page]
 
-  if (page === 'admin') {
+  if (page === 'health') {
+    return res.status(200).send('OK')
+  } else if (page === 'admin') {
     // return res.sendFile('admin.html', { root: 'public' })
     return res.sendFile(process.cwd() + '/server/views/admin.html')
   }
