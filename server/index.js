@@ -9,7 +9,7 @@ import { home } from './utils/init.js'
 
 const app = express()
 
-const port = 5500
+const port = process.env.PORT || 5500
 
 app.use(compression())
 
