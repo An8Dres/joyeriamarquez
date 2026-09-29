@@ -593,6 +593,7 @@ main {
 
   .page {
     padding: .5rem;
+    padding-bottom: 2rem;
 
     &.modal {
       padding: 0;
