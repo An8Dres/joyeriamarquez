@@ -13,7 +13,7 @@
 
   .add-panel {
     width: 100%;
-    height: 340px;
+    height: auto;
     position: relative;
   }
 
@@ -343,10 +343,6 @@
       color: transparent;
       text-wrap: pretty;
       filter: drop-shadow(2px 2px 4px #000);
-    }
-
-    .add-panel img {
-      object-position: left;
     }
 
     .add-panel div {
