@@ -55,7 +55,11 @@ export const templates = {
     let part1 = `
     <article id="home" class="page ${isVisible}">
       <div class="add-panel">
-        <img src="/images/banner-phone.webp" sizes="80vw" srcset="/images/banner-phone.webp 700w, /images/banner-desktop.webp 1200w" alt="Banner add product">
+        <picture>
+          <source media="(max-width: 500px)" srcset="/images/banner-phone.webp">
+          <source media="(max-width: 738px)" srcset="/images/banner-tablet.webp">
+          <img src="/images/banner-desktop.webp" alt="Banner add product">
+        </picture>
         <div>
           <h2>EDICIÓN LIMITADA: LA COLECCIÓN DE ESMERALDAS REALEZA</h2>
           <p>Joyas artesanales con el más fino oro de 18k y gemas certificadas. Diseñadas para deslumbrar.</p>
