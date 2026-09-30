@@ -108,6 +108,7 @@ editForm.addEventListener("submit", async (event) => {
         titulo: formData.get("titulo"),
         info: formData.get("info"),
         precio: formData.get("precio"),
+        precio_anterior: formData.get("precio_anterior"),
         stock: formData.get("stock")
     };
 

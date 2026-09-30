@@ -68,10 +68,10 @@ apiRouter.post('/products/:type', async (req, res) => {
 
 apiRouter.post('/upload', upload.single('imagen'), async (req, res) => {
     try {
-        const { titulo, info, precio, stock } = req.body
+        const { titulo, info, precio, precio_anterior, stock } = req.body
         const imagen = req.file
 
-        if (!titulo || !info || !precio || stock === undefined) {
+        if (!titulo || !info || !precio || !precio_anterior || stock === undefined) {
             return res.status(400).json({
                 message: 'Faltan datos obligatorios'
             })
@@ -84,6 +84,7 @@ apiRouter.post('/upload', upload.single('imagen'), async (req, res) => {
         }
 
         const precioNumero = Number(precio)
+        const precioAnteriorNumero = Number(precio_anterior)
         const stockNumero = Number(stock)
 
         if (!Number.isFinite(precioNumero) || precioNumero < 0) {
@@ -95,6 +96,12 @@ apiRouter.post('/upload', upload.single('imagen'), async (req, res) => {
         if (!Number.isInteger(stockNumero) || stockNumero < 0) {
             return res.status(400).json({
                 message: 'El stock no es válido'
+            })
+        }
+
+        if (!Number.isFinite(precioAnteriorNumero) || precioAnteriorNumero < 0) {
+            return res.status(400).json({
+                message: 'El precio anterior no es válido'
             })
         }
 
@@ -116,7 +123,7 @@ apiRouter.post('/upload', upload.single('imagen'), async (req, res) => {
                 ${info},
                 ${imageUrl},
                 ${precioNumero},
-                ${Math.round(precioNumero * 1.2)},
+                ${precioAnteriorNumero},
                 'pulsera',
                 ${stockNumero}
             )
@@ -152,6 +159,7 @@ apiRouter.patch('/:id', async (req, res) => {
             titulo,
             info,
             precio,
+            precio_anterior,
             stock
         } = req.body
 
@@ -177,6 +185,18 @@ apiRouter.patch('/:id', async (req, res) => {
             }
         }
 
+        let precioAnteriorNumero = null
+
+        if (precio_anterior !== undefined) {
+            precioAnteriorNumero = Number(precio_anterior)
+
+            if (!Number.isFinite(precioAnteriorNumero) || precioAnteriorNumero < 0) {
+                return res.status(400).json({
+                    message: 'El precio anterior no es válido'
+                })
+            }
+        }
+
         /* -----------------------------------------
            VALIDAR STOCK
         ----------------------------------------- */
@@ -196,17 +216,14 @@ apiRouter.patch('/:id', async (req, res) => {
         /* -----------------------------------------
            ACTUALIZAR
         ----------------------------------------- */
-
-        console.log('Precio recibido del front:', precioNumero)
         
-        if (precioNumero) await sql`UPDATE productos SET precio_anterior = precio WHERE id = ${id}`
-
         const [producto] = await sql`
             UPDATE productos
             SET
                 nombre = COALESCE(${titulo ?? null}, nombre),
                 descripcion = COALESCE(${info ?? null}, descripcion),
                 precio = COALESCE(${precioNumero}, precio),
+                precio_anterior = COALESCE(${precioAnteriorNumero}, precio_anterior),
                 stock = COALESCE(${stockNumero}, stock)
 
             WHERE id = ${id}
