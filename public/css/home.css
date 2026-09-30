@@ -33,7 +33,7 @@
     border: 1px solid #fff3;
     border-radius: 2rem;
     box-shadow: 0 10px 20px var(--shadowColor);
-    object-fit: cover;
+    /* object-fit: contain; */
   }
 
   .add-panel div {
