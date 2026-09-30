@@ -106,7 +106,7 @@ main {
 
 #loader {
   background-color: var(--glassyColor);
-  background-image: url('/iconos/loader-compreso.png');
+  background-image: url('/images/icon.png'); /*'/images/loader-compreso.png'*/
   background-repeat: no-repeat;
   background-size: 100px;
   background-position: 50% calc(50% - 5px);
